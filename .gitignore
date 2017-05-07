@@ -1,0 +1,7 @@
+**/*.pyc
+.DS_Store
+logs/
+experiments/
+.idea
+_modules/
+doc/_build/
