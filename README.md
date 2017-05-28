@@ -2,11 +2,12 @@
 
 STRIPStream is a Python library containing both a language for modeling planning problems in infinite domains and algorithms for solving these problems.
 
-STRIPStream is still in development. Additional documentation and examples will be added shortly. In particular, several robotics examples using OpenRAVE and a in-house, standalone Python robotics simulator are on the way.
+STRIPStream is still in development. Additional documentation and examples will be added shortly. In particular, several robotics examples using OpenRAVE and an in-house, standalone Python robotics simulator are on the way.
 
 ## Documentation
 
 https://caelan.github.io/stripstream/
+http://web.mit.edu/caelan/www/research/stripstream/
 
 ## Search Subroutines
 
@@ -23,7 +24,7 @@ It should look similar to ```.../FastDownward/builds/release32/``` depending on 
 
 ### FastForward
 
-FastForward is avaliable here:
+FastForward is available here:
 
 https://fai.cs.uni-saarland.de/hoffmann/ff.html
 
@@ -38,17 +39,15 @@ The following scripts contain example STRIPStream formulations:
 python -m scripts.run_tutorial
 python -m scripts.run_pddl_tutorial
 python -m scripts.blocksworld
-python -m scripts.run_countable_tamp [-fd] [-focus] [-viewer] [-display]
-python -m scripts.run_continuous_tamp [--search SEARCH] [-focus] [-viewer] [-display]
+python -m scripts.run_countable_tamp [--search SEARCH]  [-focus] [-viewer] [-display]
+python -m scripts.run_continuous_tamp [-fd] [-focus] [-viewer] [-display]
 ```
 
 ## Testing
 
 The following command executes tests that do not require FastDownward:
 
-```
-python -m unittest tests.test_countable_bfs
-```
+```python -m unittest tests.test_countable_bfs```
 
 The following command executes tests that require FastDownward:
 
