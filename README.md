@@ -62,8 +62,7 @@ Additional tests will be added in the future.
 
 ## Publications
 
-STRIPS Planning in Infinite Domains
-https://arxiv.org/abs/1701.00287
+STRIPS Planning in Infinite Domains - https://arxiv.org/abs/1701.00287
 
 ## Citation
 
