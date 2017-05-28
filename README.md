@@ -7,6 +7,7 @@ STRIPStream is still in development. Additional documentation and examples will 
 ## Documentation
 
 https://caelan.github.io/stripstream/
+
 http://web.mit.edu/caelan/www/research/stripstream/
 
 ## Search Subroutines
