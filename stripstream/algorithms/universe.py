@@ -2,7 +2,7 @@ from collections import defaultdict, namedtuple
 from time import time
 from operator import attrgetter
 
-from stripstream.algorithms.utils import AbstractConstant, Concrete
+from stripstream.algorithms.focused.utils import AbstractConstant, Concrete, partition_values
 from stripstream.utils import SEPARATOR
 from stripstream.pddl.logic.atoms import Initialize, Atom
 from stripstream.pddl.logic.predicates import Predicate, TotalCost, Function
@@ -11,7 +11,8 @@ from stripstream.pddl.operators import Action, Axiom
 from stripstream.utils import INF
 
 
-from stripstream.algorithms.instantiation import parameter_product
+from stripstream.algorithms.instantiation import parameter_product, instantiate_axioms, parameter_product2
+
 
 ValueStats = namedtuple(
     'ValueStats', ['stream', 'call_time', 'prior_time', 'prior_calls'])
@@ -409,8 +410,8 @@ class Universe(object):
         s = ''
         for ty in self.type_to_objects:
             if len(self.type_to_objects[ty]) != 0:
-                s += '\n\t' + ' '.join(obj.pddl()
-                                       for obj in self.type_to_objects[ty])
+                s += '\n\t' + ' '.join(sorted(obj.pddl()
+                                              for obj in self.type_to_objects[ty]))
 
                 if ty is not None:
                     s += ' - ' + ty.pddl()
@@ -435,8 +436,10 @@ class Universe(object):
             s += '(:functions %s)\n' % '\n\t'.join(function.pddl()
                                                    for function in [TotalCost] + self.functions)
         if len(self.name_to_action) != 0:
+            actions = self.name_to_action.values()
+
             s += '\n' + '\n\n'.join(action.pddl(costs)
-                                    for action in self.name_to_action.values()) + '\n'
+                                    for action in actions) + '\n'
         if len(self.axioms) != 0:
             s += '\n' + '\n\n'.join(axiom.pddl() for axiom in self.axioms)
         return s + ')\n'
@@ -453,9 +456,10 @@ class Universe(object):
 
     def initial_pddl(self, costs):
         atoms = list(self.get_initial_atoms())
+
         if costs:
             atoms.append(Initialize(TotalCost(), self.initial_cost))
-        return '(' + '\n\t'.join([':init'] + [atom.pddl() for atom in atoms]) + ')'
+        return '(' + '\n\t'.join([':init'] + sorted([atom.pddl() for atom in atoms])) + ')'
 
     def goal_pddl(self):
         return '(:goal %s)' % self.goal_formula.pddl()
@@ -500,5 +504,23 @@ class Universe(object):
         print 'Enumerated:', self.enumerated
         print
         print 'Problem statistics'
+        print 'Cond Stream | Calls | Total Time | Average Time | Success %'
         for cs in self.problem.cond_streams:
-            print cs, cs.calls, cs.call_time
+            successes = 0.
+            for stream in cs.streams.values():
+                for values in stream.call_history:
+                    successes += len(list(bind_stream_outputs2(stream, values))) != 0
+            print cs, cs.calls, round(cs.call_time, 5),
+            if cs.calls:
+                print round(cs.call_time / cs.calls, 5), round(successes / cs.calls, 5)
+            else:
+                print
+
+
+def bind_stream_outputs2(stream, values, history=True):
+    target_parameters = stream.cond_stream.outputs
+    target_atoms = set(stream.instantiate_effects({}))
+    produced_atoms, produced_objects = partition_values(values)
+    if not target_parameters:
+        return iter([{}]) if target_atoms <= produced_atoms else iter([])
+    return parameter_product2(target_parameters, produced_objects, target_atoms, produced_atoms)

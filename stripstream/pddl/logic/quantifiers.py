@@ -57,7 +57,7 @@ class Quantifier(Formula):
         return self.__class__(self.args, self.formula.instantiate(parameter_map))
 
     def expand(self, constants):
-        values = [constants[arg.type] for arg in self.args]
+        values = [constants.get(arg.type, []) for arg in self.args]
         for combo in product(*values):
             yield self.formula.instantiate(dict(zip(self.args, combo)))
 

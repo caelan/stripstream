@@ -1,8 +1,11 @@
 from collections import Iterable, defaultdict
 
-from stripstream.pddl.logic.connectives import And
+from stripstream.pddl.logic.connectives import And, Not, When
+from stripstream.pddl.operators import STRIPSAction, STRIPSAxiom, Action, Axiom
 from stripstream.pddl.logic.formulas import Formula
-from stripstream.pddl.objects import Constant
+from stripstream.pddl.logic.quantifiers import ForAll
+from stripstream.pddl.objects import Constant, Parameter
+from stripstream.utils import flatten
 
 
 def substitute_axioms(condition, derived):
@@ -33,7 +36,6 @@ class STRIPStreamProblem(object):
         self.objects = objects
 
     def is_strips(self):
-        from stripstream.pddl.operators import STRIPSAction, STRIPSAxiom
         return all(isinstance(op, STRIPSAction) or
                    isinstance(op, STRIPSAxiom) for op in self.operators)
 
@@ -51,7 +53,6 @@ class STRIPStreamProblem(object):
         self.goal_literals = Goal()
 
     def replace_axioms(self):
-        from stripstream.pddl.operators import Action, Axiom
         derived = {}
         for op in self.operators:
             if isinstance(op, Axiom):
@@ -63,6 +64,59 @@ class STRIPStreamProblem(object):
                 actions.append(action)
         self.operators = actions
         substitute_axioms(self.goal_literals, derived)
+
+    def convert_axioms_to_effects(self):
+        derived_predicates = self.get_derived_predicates()
+        fluent_predicates = self.get_fluent_predicates()
+        constants = defaultdict(set)
+        for const in self.get_constants():
+            constants[const.type].add(const)
+
+        mapping = []
+        for op in self.operators:
+            if isinstance(op, Axiom):
+                [conditions] = op.condition.dequantify(
+                    constants).get_literals()
+                assert not filter(
+                    lambda a: a.predicate in derived_predicates, conditions)
+                print conditions
+                [fluent] = filter(
+                    lambda a: a.predicate in fluent_predicates, conditions)
+                others = filter(lambda a: a != fluent, conditions)
+                mapping.append((fluent, others, op.effect))
+
+        new_operators = []
+        for op in self.operators:
+            if isinstance(op, Action):
+                new_op = op.clone()
+                new_operators.append(new_op)
+                [literals] = new_op.effect.get_literals()
+                for literal in literals:
+                    effect = literal.formula if isinstance(
+                        literal, Not) else literal
+                    for fluent, conditions, derived in mapping:
+                        if effect.predicate == fluent.predicate:
+                            free_params = set(
+                                flatten(map(lambda a: a.args, [derived] + conditions))) - set(fluent.args)
+                            param_map = dict(zip(fluent.args, effect.args))
+                            for i, param in enumerate(free_params):
+
+                                param_map[param] = Parameter(
+                                    'l%s' % i, param.type)
+
+                            new_params = list(
+                                set(param_map.values()) - set(effect.args))
+                            new_derived = derived.instantiate(param_map)
+                            new_conditions = [cond.instantiate(
+                                param_map) for cond in conditions]
+                            if isinstance(literal, Not):
+                                new_op.add_effects(ForAll(new_params, When(
+                                    And(*new_conditions), new_derived)))
+                            else:
+                                new_op.add_effects(ForAll(new_params, When(
+                                    And(*new_conditions), Not(new_derived))))
+
+        return new_operators
 
     def to_strips(self):
         constants = defaultdict(set)

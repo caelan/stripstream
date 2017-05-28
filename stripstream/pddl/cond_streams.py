@@ -397,3 +397,10 @@ def not_equal_stream(ty1=OBJECT, ty2=OBJECT):
     cs = EasyTestStream([X1, X2], [], [AreNotEqual(X1, X2)],
                         lambda x1, x2: x1 != x2, eager=True)
     return AreNotEqual, cs
+
+
+def make_test_stream(cond_stream):
+    if not cond_stream.outputs:
+        return cond_stream
+
+    raise NotImplementedError()

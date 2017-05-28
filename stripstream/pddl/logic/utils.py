@@ -10,7 +10,7 @@ def invert(literal):
 
 
 def is_literal(f):
-    return isinstance(f, atoms.Atom) or (isinstance(f, connectives.Not) and is_literal(f.formulas[0])) or isinstance(f, atoms.Increase)
+    return isinstance(f, atoms.Atom) or (isinstance(f, connectives.Not) and is_literal(f.formulas[0])) or isinstance(f, atoms.Increase) or isinstance(f, atoms.Equal)
 
 
 def is_conjunction(f):

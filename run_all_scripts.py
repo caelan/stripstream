@@ -5,6 +5,8 @@ import importlib
 from inspect import getmembers, isfunction, getargspec
 from stripstream.utils import SEPARATOR
 
+IMPORT_ONLY = False
+
 pkgpath = os.path.dirname(scripts.__file__)
 for _, module_name, is_dir in pkgutil.iter_modules([pkgpath]):
     if not is_dir:
@@ -14,6 +16,7 @@ for _, module_name, is_dir in pkgutil.iter_modules([pkgpath]):
         module = importlib.import_module(location)
         #module = __import__(location)
 
-        for name, value in getmembers(module):
-            if isfunction(value) and name == 'main' and getargspec(value)[0] == []:
-                value()
+        if not IMPORT_ONLY:
+            for name, value in getmembers(module):
+                if isfunction(value) and name == 'main' and getargspec(value)[0] == []:
+                    value()

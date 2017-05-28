@@ -33,7 +33,7 @@ class Formula(object):
 
     def instantiate(self, parameter_map): raise NotImplementedError()
 
-    def clone(self): self.instantiate({})
+    def clone(self): return self.instantiate({})
 
     def substitute(self, atom, subformula): raise NotImplementedError()
 

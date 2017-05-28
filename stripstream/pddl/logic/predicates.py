@@ -1,4 +1,4 @@
-from stripstream.pddl.objects import PARAM_PREFIX, TYPE_PAIR, Object
+from stripstream.pddl.objects import PARAM_PREFIX, TYPE_PAIR, Object, EasyType
 
 
 class Head(object):
@@ -113,7 +113,7 @@ def convert_args(self, args):
                          (args, self.types))
     new_args = []
     for ty, arg in zip(self.types, args):
-        if not isinstance(arg, Object):
+        if isinstance(ty, EasyType) and not isinstance(arg, Object):
             new_args.append(ty.get_const(arg))
         else:
             new_args.append(arg)

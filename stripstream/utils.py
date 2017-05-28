@@ -112,3 +112,7 @@ GRAPH_VIZ_COLORS = ['AntiqueWhite', 'Aquamarine', 'Beige', 'Bisque', 'Black', 'B
                     'Tomato', 'Turquoise', 'Violet', 'Wheat', 'Yellow', 'YellowGreen']
 
 GRAPH_VIZ_SHAPES = ['box', 'oval', 'square', 'circle']
+
+
+def set_union(sequence):
+    return set().union(*sequence)

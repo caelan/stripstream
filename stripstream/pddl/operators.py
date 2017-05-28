@@ -116,6 +116,9 @@ class Action(Operator):
             instance.original = self
             yield instance
 
+    def clone(self):
+        return Action(self.name[:], self.parameters[:], self.condition.clone(), self.effect.clone())
+
     def __repr__(self):
         return self.name
     __str__ = __repr__
@@ -195,10 +198,18 @@ class Axiom(Operator):
 
     def instantiate(self, args): return AxiomInstance(self, args)
 
-    def to_strips(self, constants): raise NotImplementedError()
+    def to_strips(self, constants):
+        condition = self.condition.dequantify(constants)
+        for i, cons in enumerate(condition.get_literals()):
+            instance = STRIPSAxiom(cons, [self.effect])
+            instance.original = self
+            yield instance
 
     def pddl(self):
         return '(:derived %s\n\t%s)' % (self.effect.typed_pddl(), self.condition.pddl())
+
+    def clone(self):
+        return Axiom(self.condition.clone(), self.effect.clone())
 
     def __repr__(self):
         return self.effect.name

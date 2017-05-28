@@ -54,9 +54,17 @@ def substitute_axioms(condition, state, universe):
 
 
 def apply_axioms(state, constants, axioms):
-    for axiom in axioms:
-        if axiom.is_applicable(state, constants):
-            state = axiom.apply(state, constants)
+
+    unused_axioms = set(axioms)
+    while True:
+        terminate = True
+        for axiom in list(unused_axioms):
+            if axiom.is_applicable(state, constants):
+                state = axiom.apply(state, constants)
+                terminate = False
+                unused_axioms.remove(axiom)
+        if terminate:
+            break
     return state
 
 
