@@ -5,7 +5,7 @@ import importlib
 from inspect import getmembers, isfunction, getargspec
 from stripstream.utils import SEPARATOR
 
-IMPORT_ONLY = False
+IMPORT_ONLY = True
 
 pkgpath = os.path.dirname(scripts.__file__)
 for _, module_name, is_dir in pkgutil.iter_modules([pkgpath]):
