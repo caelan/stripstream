@@ -6,3 +6,4 @@ experiments/
 _modules/
 doc/_build/
 sphinx/
+run_all_scripts.py
