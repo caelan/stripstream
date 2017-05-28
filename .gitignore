@@ -4,4 +4,5 @@ logs/
 experiments/
 .idea
 _modules/
-doc/
+doc/_build/
+sphinx/

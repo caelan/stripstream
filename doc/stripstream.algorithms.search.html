@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stripstream.algorithms.search package &#8212; STRIPStream 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="stripstream.algorithms.focused package" href="stripstream.algorithms.focused.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>STRIPStream 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>stripstream.algorithms.search package</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="stripstream.algorithms.focused.html">stripstream.algorithms.focused package</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="stripstream-algorithms-search-package">
+<h1>stripstream.algorithms.search package<a class="headerlink" href="#stripstream-algorithms-search-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-stripstream.algorithms.search.bfs">
+<span id="stripstream-algorithms-search-bfs-module"></span><h2>stripstream.algorithms.search.bfs module<a class="headerlink" href="#module-stripstream.algorithms.search.bfs" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="stripstream.algorithms.search.bfs.get_bfs">
+<code class="descclassname">stripstream.algorithms.search.bfs.</code><code class="descname">get_bfs</code><span class="sig-paren">(</span><em>max_time=30</em>, <em>max_cost=inf</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/algorithms/search/bfs.html#get_bfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.algorithms.search.bfs.get_bfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a breadth-first search (BFS) search function configured using the arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_time</strong> &#8211; a numeric constant for the maximum BFS search time.</li>
+<li><strong>max_cost</strong> &#8211; a numeric constant for the maximum BFS solution cost.</li>
+<li><strong>verbose</strong> &#8211; a boolean flag toggling the amount of terminal output</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">function wrapper around <code class="xref py py-class docutils literal"><span class="pre">bfs</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.algorithms.search.fast_downward">
+<span id="stripstream-algorithms-search-fast-downward-module"></span><h2>stripstream.algorithms.search.fast_downward module<a class="headerlink" href="#module-stripstream.algorithms.search.fast_downward" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="stripstream.algorithms.search.fast_downward.get_fast_downward">
+<code class="descclassname">stripstream.algorithms.search.fast_downward.</code><code class="descname">get_fast_downward</code><span class="sig-paren">(</span><em>config='wastar2'</em>, <em>max_time=30</em>, <em>max_cost=inf</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/algorithms/search/fast_downward.html#get_fast_downward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.algorithms.search.fast_downward.get_fast_downward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a FastDownward (FD) search function configured using the arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> &#8211; a string that is a key of <code class="xref py py-data docutils literal"><span class="pre">search_options</span></code> giving the FD configuration.</li>
+<li><strong>max_time</strong> &#8211; a numeric constant for the maximum FD search time.</li>
+<li><strong>max_cost</strong> &#8211; a numeric constant for the maximum FD solution cost.</li>
+<li><strong>verbose</strong> &#8211; a boolean flag toggling the amount of terminal output</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">function wrapper around <code class="xref py py-func docutils literal"><span class="pre">fast_downward()</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.algorithms.search">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stripstream.algorithms.search" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="stripstream.algorithms.focused.html">stripstream.algorithms.focused package</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Caelan Reed Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

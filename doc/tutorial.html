@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tutorials &#8212; STRIPStream 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="stripstream package" href="stripstream.html" />
+    <link rel="prev" title="Welcome to STRIPStream’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>STRIPStream 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>tutorials</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">Welcome to STRIPStream&#8217;s documentation!</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="stripstream.html">stripstream package</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="tutorials">
+<h1>tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="scripts-run-tutorial-module">
+<h2>scripts.run_tutorial module<a class="headerlink" href="#scripts-run-tutorial-module" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial considers a 1D task and motion planning domain with 1 robot and 3 blocks.
+Robot configurations and block poses are nonnegative integers from 0 to <code class="docutils literal"><span class="pre">num_poses</span></code>.
+The robot can move to other configurations, pick blocks, and place blocks.
+For simplicity, assume that the robot cannot collide with blocks when it moves, picks, or places.
+Thus, the only collisions are between pairs of blocks.</p>
+<p>We consider the following problem specification.
+The robot starts at configuration 0.
+Each block i starts at pose i.
+The goal conditions require each block i be shifted right one pose to pose i+1.
+There are <code class="docutils literal"><span class="pre">num_poses</span> <span class="pre">=</span> <span class="pre">10^10</span></code> possible poses for each block.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;block</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">num_poses</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># 10^10 possible poses!</span>
+
+<span class="n">initial_config</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># the initial robot configuration is 0</span>
+<span class="n">initial_poses</span> <span class="o">=</span> <span class="p">{</span><span class="n">block</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">blocks</span><span class="p">)}</span> <span class="c1"># the initial pose for block i is i</span>
+
+<span class="n">goal_poses</span> <span class="o">=</span> <span class="p">{</span><span class="n">block</span><span class="p">:</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">blocks</span><span class="p">)}</span> <span class="c1"># the goal pose for block i is i+1</span>
+</pre></div>
+</div>
+<p>We start by creating the object types for configurations (<code class="docutils literal"><span class="pre">CONF</span></code>), blocks (<code class="docutils literal"><span class="pre">BLOCK</span></code>), and poses (<code class="docutils literal"><span class="pre">POSE</span></code>).
+Types are used to restrict the domain of predicates to only apply to sensible objects.
+These can be alternatively thought of as implicit unary predicates.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">CONF</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span> <span class="o">=</span> <span class="n">Type</span><span class="p">(),</span> <span class="n">Type</span><span class="p">(),</span> <span class="n">Type</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Next, we define the predicates (<code class="docutils literal"><span class="pre">Pred</span></code>) we will use.
+A predicate is specified by a list of types for its arguments.
+For our domain, we use the fluent predicates <code class="docutils literal"><span class="pre">AtConf</span></code> to model the robot&#8217;s configuration,
+<code class="docutils literal"><span class="pre">AtPose</span></code> to model the pose of each block, <code class="docutils literal"><span class="pre">HandEmpty</span></code> to indicate the robot is not holding anything, and
+<code class="docutils literal"><span class="pre">Holding</span></code> to specify the block the robot is holding.</p>
+<p>We will later define an axiom that uses the derived predicate <code class="docutils literal"><span class="pre">Safe</span></code> to compactly handle collision checking.
+<code class="docutils literal"><span class="pre">Safe</span></code> indicates that the first block is at some pose that is not in collision with the second block at the specified pose.</p>
+<p>Finally, we define two static predicates, predicates that have constant truth value throughout a problem.
+<code class="docutils literal"><span class="pre">LegalKin</span></code> indicates that a block pose and robot configuration satisfy a kinematic constraint.
+Namely, the robot must be at the same pose as the block in order to pick or place the block.
+<code class="docutils literal"><span class="pre">CollisionFree</span></code> is true if and only if the first block at the first pose is not in collision with the second block
+at the second pose.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Fluent predicates</span>
+<span class="n">AtConf</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">(</span><span class="n">CONF</span><span class="p">)</span>
+<span class="n">AtPose</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">HandEmpty</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">()</span>
+<span class="n">Holding</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+
+<span class="c1"># Derived predicates</span>
+<span class="n">Safe</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+
+<span class="c1"># Static predicates</span>
+<span class="n">LegalKin</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">(</span><span class="n">POSE</span><span class="p">,</span> <span class="n">CONF</span><span class="p">)</span>
+<span class="n">CollisionFree</span> <span class="o">=</span> <span class="n">Pred</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define several parameters (<code class="xref py py-class docutils literal"><span class="pre">Param</span></code>) that will be arguments of several actions, axioms, and conditional streams.
+Each parameter is of the type specified by its argument and had a unique, anonymous name.
+Parameters are only meaningful within the local scope of a action, axiom, or conditional stream.
+Sharing parameters simply results in more compact code.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">B1</span><span class="p">,</span> <span class="n">B2</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">),</span> <span class="n">Param</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+<span class="n">P1</span><span class="p">,</span> <span class="n">P2</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="n">POSE</span><span class="p">),</span> <span class="n">Param</span><span class="p">(</span><span class="n">POSE</span><span class="p">)</span>
+<span class="n">Q1</span><span class="p">,</span> <span class="n">Q2</span> <span class="o">=</span> <span class="n">Param</span><span class="p">(</span><span class="n">CONF</span><span class="p">),</span> <span class="n">Param</span><span class="p">(</span><span class="n">CONF</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we identify three actions (<a class="reference internal" href="stripstream.pddl.html#stripstream.pddl.operators.Action" title="stripstream.pddl.operators.Action"><code class="xref py py-class docutils literal"><span class="pre">Action</span></code></a>). Each action is specified by a <code class="docutils literal"><span class="pre">name</span></code>, list of <code class="docutils literal"><span class="pre">parameters</span></code>,
+<code class="docutils literal"><span class="pre">condition</span></code> logical formula, and <code class="docutils literal"><span class="pre">effect</span></code> logical formula. Logical formulas are nested combinations of
+<code class="xref py py-class docutils literal"><span class="pre">Atom</span></code>, <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.connectives.Not" title="stripstream.pddl.logic.connectives.Not"><code class="xref py py-class docutils literal"><span class="pre">Not</span></code></a>, <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.connectives.And" title="stripstream.pddl.logic.connectives.And"><code class="xref py py-class docutils literal"><span class="pre">And</span></code></a>, <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.connectives.Or" title="stripstream.pddl.logic.connectives.Or"><code class="xref py py-class docutils literal"><span class="pre">Or</span></code></a>, <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.quantifiers.Exists" title="stripstream.pddl.logic.quantifiers.Exists"><code class="xref py py-class docutils literal"><span class="pre">Exists</span></code></a>, <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.quantifiers.ForAll" title="stripstream.pddl.logic.quantifiers.ForAll"><code class="xref py py-class docutils literal"><span class="pre">ForAll</span></code></a>, <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.atoms.Equal" title="stripstream.pddl.logic.atoms.Equal"><code class="xref py py-class docutils literal"><span class="pre">Equal</span></code></a>, and <a class="reference internal" href="stripstream.pddl.logic.html#stripstream.pddl.logic.connectives.When" title="stripstream.pddl.logic.connectives.When"><code class="xref py py-class docutils literal"><span class="pre">When</span></code></a>.</p>
+<p>The <code class="docutils literal"><span class="pre">'pick'</span></code> action has a block <code class="docutils literal"><span class="pre">B1</span></code>, pose <code class="docutils literal"><span class="pre">P1</span></code>, and configuration <code class="docutils literal"><span class="pre">Q1</span></code> parameter. Its condition is that
+block <code class="docutils literal"><span class="pre">B1</span></code> be at pose <code class="docutils literal"><span class="pre">P1</span></code>, the robot&#8217;s hand is empty, the robot be at configuration <code class="docutils literal"><span class="pre">Q1</span></code>, and
+pose <code class="docutils literal"><span class="pre">P1</span></code> and configuration <code class="docutils literal"><span class="pre">Q1</span></code> satisfy the kinematic constraint.
+Its effect is that the robot is now holding <code class="docutils literal"><span class="pre">B1</span></code>, block <code class="docutils literal"><span class="pre">B1</span></code> is no longer at pose <code class="docutils literal"><span class="pre">P1</span></code>, and
+the robot&#8217;s hand is no longer empty.</p>
+<p>The <code class="docutils literal"><span class="pre">'place'</span></code> action is the inverse of a the <code class="docutils literal"><span class="pre">'pick'</span></code> action. It has an additional condition that each of the
+other blocks <code class="docutils literal"><span class="pre">B2</span></code> is at a safe pose with respect to block <code class="docutils literal"><span class="pre">B1</span></code> at pose <code class="docutils literal"><span class="pre">P1</span></code>.</p>
+<p>The <code class="docutils literal"><span class="pre">'move'</span></code> action has parameters <code class="docutils literal"><span class="pre">Q1</span></code> and <code class="docutils literal"><span class="pre">Q2</span></code> for the start and end configurations. Its condition is that
+the robot starts at configuration <code class="docutils literal"><span class="pre">Q1</span></code> and its effect is that the robot is at configuration <code class="docutils literal"><span class="pre">Q2</span></code> instead of configuration <code class="docutils literal"><span class="pre">Q1</span></code>.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">actions</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;pick&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">Q1</span><span class="p">],</span>
+     <span class="n">condition</span><span class="o">=</span><span class="n">And</span><span class="p">(</span><span class="n">AtPose</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">),</span> <span class="n">HandEmpty</span><span class="p">(),</span> <span class="n">AtConf</span><span class="p">(</span><span class="n">Q1</span><span class="p">),</span> <span class="n">LegalKin</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">Q1</span><span class="p">)),</span>
+     <span class="n">effect</span><span class="o">=</span><span class="n">And</span><span class="p">(</span><span class="n">Holding</span><span class="p">(</span><span class="n">B1</span><span class="p">),</span> <span class="n">Not</span><span class="p">(</span><span class="n">AtPose</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">)),</span> <span class="n">Not</span><span class="p">(</span><span class="n">HandEmpty</span><span class="p">()))),</span>
+
+   <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;place&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">Q1</span><span class="p">],</span>
+     <span class="n">condition</span><span class="o">=</span><span class="n">And</span><span class="p">(</span><span class="n">Holding</span><span class="p">(</span><span class="n">B1</span><span class="p">),</span> <span class="n">AtConf</span><span class="p">(</span><span class="n">Q1</span><span class="p">),</span> <span class="n">LegalKin</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">Q1</span><span class="p">),</span>
+       <span class="n">ForAll</span><span class="p">([</span><span class="n">B2</span><span class="p">],</span> <span class="n">Or</span><span class="p">(</span><span class="n">Equal</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">),</span> <span class="n">Safe</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">)))),</span> <span class="c1"># TODO - convert to finite blocks case?</span>
+     <span class="n">effect</span><span class="o">=</span><span class="n">And</span><span class="p">(</span><span class="n">AtPose</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">),</span> <span class="n">HandEmpty</span><span class="p">(),</span> <span class="n">Not</span><span class="p">(</span><span class="n">Holding</span><span class="p">(</span><span class="n">B1</span><span class="p">)))),</span>
+
+   <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;move&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="n">Q1</span><span class="p">,</span> <span class="n">Q2</span><span class="p">],</span>
+     <span class="n">condition</span><span class="o">=</span><span class="n">AtConf</span><span class="p">(</span><span class="n">Q1</span><span class="p">),</span>
+     <span class="n">effect</span><span class="o">=</span><span class="n">And</span><span class="p">(</span><span class="n">AtConf</span><span class="p">(</span><span class="n">Q2</span><span class="p">),</span> <span class="n">Not</span><span class="p">(</span><span class="n">AtConf</span><span class="p">(</span><span class="n">Q1</span><span class="p">)))),</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+<p>We define an axiom (<a class="reference internal" href="stripstream.pddl.html#stripstream.pddl.operators.Axiom" title="stripstream.pddl.operators.Axiom"><code class="xref py py-class docutils literal"><span class="pre">Axiom</span></code></a>) that automatically infers <code class="docutils literal"><span class="pre">Safe</span></code> at each state before an action is performed.
+<code class="docutils literal"><span class="pre">Safe</span></code> is true if <code class="docutils literal"><span class="pre">B2</span></code> at its current pose <code class="docutils literal"><span class="pre">P2</span></code> is not in collision with <code class="docutils literal"><span class="pre">B1</span></code> at pose <code class="docutils literal"><span class="pre">P1</span></code>.</p>
+<p>As an aside, one could avoid using this axiom by substituting <code class="docutils literal"><span class="pre">Safe</span></code> for <code class="docutils literal"><span class="pre">condition</span></code> within the <code class="docutils literal"><span class="pre">'place'</span></code> action.
+However, this would greatly increase the number of implicit parameters for <code class="docutils literal"><span class="pre">'place'</span></code> as it would then
+involve a pose parameter for each object. Thus, the number of instantiations would grow exponentially in the
+number of blocks which is undesirable for practical performance.
+Axioms allow us to avoid exponential growth by creating an intermediate rule which infers safety for each block <code class="docutils literal"><span class="pre">B2</span></code> separately.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">axioms</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">Axiom</span><span class="p">(</span><span class="n">effect</span><span class="o">=</span><span class="n">Safe</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">),</span>
+        <span class="n">condition</span><span class="o">=</span><span class="n">Exists</span><span class="p">([</span><span class="n">P2</span><span class="p">],</span> <span class="n">And</span><span class="p">(</span><span class="n">AtPose</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">P2</span><span class="p">),</span> <span class="n">CollisionFree</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">P2</span><span class="p">)))),</span> <span class="c1"># Infers B2 is at a safe pose wrt B1 at P1</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>In order to represent the set of poses as well as evaluate <code class="docutils literal"><span class="pre">LegalKin</span></code> and <code class="docutils literal"><span class="pre">CollisionFree</span></code>, we define several conditional streams.
+A <code class="xref py py-class docutils literal"><span class="pre">GeneratorStream</span></code> is given by a list of parameter <code class="docutils literal"><span class="pre">inputs</span></code>, parameter <code class="docutils literal"><span class="pre">outputs</span></code>, conjunctive <code class="docutils literal"><span class="pre">conditions</span></code>
+that <code class="docutils literal"><span class="pre">input</span></code> values must satisfy, conjunctive <code class="docutils literal"><span class="pre">effects</span></code> which <code class="docutils literal"><span class="pre">inputs</span> <span class="pre">+</span> <span class="pre">outputs</span></code> will satisfy, and a function <code class="docutils literal"><span class="pre">generator</span></code>
+from values of <code class="docutils literal"><span class="pre">inputs</span></code> to a generator producing values of <code class="docutils literal"><span class="pre">outputs</span></code>.</p>
+<p>The first <code class="xref py py-class docutils literal"><span class="pre">GeneratorStream</span></code> enumerates the set of poses from 0 to <code class="docutils literal"><span class="pre">num_poses-1</span></code>. It has no <code class="docutils literal"><span class="pre">inputs</span></code> and therefore
+no <code class="docutils literal"><span class="pre">conditions</span></code>, a single pose output <code class="docutils literal"><span class="pre">P1</span></code>, but no <code class="docutils literal"><span class="pre">effects</span></code>. Its <code class="docutils literal"><span class="pre">generator</span> <span class="pre">simply</span> <span class="pre">enumerates</span> <span class="pre">poses</span> <span class="pre">``0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">num_poses</span></code>.</p>
+<p>The second <code class="xref py py-class docutils literal"><span class="pre">GeneratorStream</span></code> enumerates the configuration kinematic solutions for a given pose.
+It has a single pose input <code class="docutils literal"><span class="pre">P1</span></code> and a single configuration output <code class="docutils literal"><span class="pre">Q1</span></code>.
+<code class="docutils literal"><span class="pre">P1</span></code> and <code class="docutils literal"><span class="pre">Q1</span></code> are guarantee to satisfy <code class="docutils literal"><span class="pre">LegalKin</span></code> as indicated using <code class="docutils literal"><span class="pre">outputs</span></code>.
+Its <code class="docutils literal"><span class="pre">generator</span></code> just returns <code class="docutils literal"><span class="pre">p</span></code> as there is only one possible configuration per pose.</p>
+<p>A <code class="xref py py-class docutils literal"><span class="pre">TestStream</span></code> is a special type of <code class="xref py py-class docutils literal"><span class="pre">GeneratorStream</span></code> which has no <code class="docutils literal"><span class="pre">outputs</span></code>.
+Thus, it can be specified using a boolean <code class="docutils literal"><span class="pre">test</span></code> function which determines if <code class="docutils literal"><span class="pre">effects</span></code> hold instead of a <code class="docutils literal"><span class="pre">generator</span></code>.</p>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">TestStream</span></code> evaluates collision checks between block <code class="docutils literal"><span class="pre">B1</span></code> at pose <code class="docutils literal"><span class="pre">P1</span></code> and block <code class="docutils literal"><span class="pre">B2</span></code> at pose <code class="docutils literal"><span class="pre">P2</span></code>.
+In our simplified model, two blocks are not in collision if they are at different poses.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Conditional stream declarations</span>
+<span class="n">cond_streams</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">GeneratorStream</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[],</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">P1</span><span class="p">],</span> <span class="n">conditions</span><span class="o">=</span><span class="p">[],</span> <span class="n">effects</span><span class="o">=</span><span class="p">[],</span>
+                  <span class="n">generator</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">xrange</span><span class="p">(</span><span class="n">num_poses</span><span class="p">)),</span> <span class="c1"># Enumerating all poses</span>
+
+  <span class="n">GeneratorStream</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">P1</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">Q1</span><span class="p">],</span> <span class="n">conditions</span><span class="o">=</span><span class="p">[],</span> <span class="n">effects</span><span class="o">=</span><span class="p">[</span><span class="n">LegalKin</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">Q1</span><span class="p">)],</span>
+                  <span class="n">generator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="p">]),</span> <span class="c1"># Inverse kinematics</span>
+
+  <span class="n">TestStream</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">P2</span><span class="p">],</span> <span class="n">conditions</span><span class="o">=</span><span class="p">[],</span> <span class="n">effects</span><span class="o">=</span><span class="p">[</span><span class="n">CollisionFree</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">P2</span><span class="p">)],</span>
+             <span class="n">test</span><span class="o">=</span><span class="k">lambda</span> <span class="n">b1</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="n">p1</span> <span class="o">!=</span> <span class="n">p2</span><span class="p">,</span> <span class="n">eager</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="c1"># Collision checking</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The initial state is represented as a list of <code class="docutils literal"><span class="pre">initial_atoms</span></code>.
+For our problem, the robot starts at <code class="docutils literal"><span class="pre">initial_config</span></code> with its hand empty.
+Each block starts at its corresponding initial pose.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">initial_atoms</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">AtConf</span><span class="p">(</span><span class="n">initial_config</span><span class="p">),</span>
+  <span class="n">HandEmpty</span><span class="p">()</span>
+<span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+  <span class="n">AtPose</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">pose</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span><span class="p">,</span> <span class="n">pose</span> <span class="ow">in</span> <span class="n">initial_poses</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The set of goal states is represented as a list of <code class="docutils literal"><span class="pre">goal_literals</span></code>.
+For our problem, each block has a goal condition that it ends up at its corresponding goal pose.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">goal_literals</span> <span class="o">=</span> <span class="p">[</span><span class="n">AtPose</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">pose</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span><span class="p">,</span> <span class="n">pose</span> <span class="ow">in</span> <span class="n">goal_poses</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()]</span>
+</pre></div>
+</div>
+<p>STRIPStream automatically infers the type of and stores any objects passed to predicates.
+In the event in which an object is not already included in the <code class="docutils literal"><span class="pre">initial_atoms</span></code>, <code class="docutils literal"><span class="pre">goal_literals</span></code>, <code class="docutils literal"><span class="pre">actions</span></code>, or <code class="docutils literal"><span class="pre">axioms</span></code>,
+it can be specified using <code class="docutils literal"><span class="pre">constants</span></code>. Because STRIPStream cannot infer the type of a standalone object, it must be
+wrapped with the desired type. Suppose that the robot can move off the line to a <code class="docutils literal"><span class="pre">None</span></code> configuration. We can
+indicate this by including <code class="docutils literal"><span class="pre">CONF(None)</span></code> in <code class="docutils literal"><span class="pre">constants</span></code>.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">constants</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">CONF</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="c1"># Any additional objects</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Putting this all together, we arrive at the definition of a <code class="xref py py-class docutils literal"><span class="pre">STRIPStreamProblem</span></code> instance.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">STRIPStreamProblem</span><span class="p">(</span><span class="n">initial_atoms</span><span class="p">,</span> <span class="n">goal_literals</span><span class="p">,</span> <span class="n">actions</span> <span class="o">+</span> <span class="n">axioms</span><span class="p">,</span> <span class="n">cond_streams</span><span class="p">,</span> <span class="n">constants</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can solve this problem by calling <a class="reference internal" href="stripstream.algorithms.incremental.html#stripstream.algorithms.incremental.incremental_planner.incremental_planner" title="stripstream.algorithms.incremental.incremental_planner.incremental_planner"><code class="xref py py-func docutils literal"><span class="pre">incremental_planner()</span></code></a> or <code class="xref py py-func docutils literal"><span class="pre">focused_planner()</span></code>.
+Each planner has an argument <code class="docutils literal"><span class="pre">search</span></code> which specifies a search subroutine to use within the planner.
+This can currently be either <a class="reference internal" href="stripstream.algorithms.search.html#stripstream.algorithms.search.bfs.get_bfs" title="stripstream.algorithms.search.bfs.get_bfs"><code class="xref py py-func docutils literal"><span class="pre">get_bfs()</span></code></a> to use an inefficient Python breadth-first search
+or <a class="reference internal" href="stripstream.algorithms.search.html#stripstream.algorithms.search.fast_downward.get_fast_downward" title="stripstream.algorithms.search.fast_downward.get_fast_downward"><code class="xref py py-func docutils literal"><span class="pre">get_fast_downward()</span></code></a> to use an efficient PDDL planner.
+However, one must install FastDownward to use <a class="reference internal" href="stripstream.algorithms.search.html#stripstream.algorithms.search.fast_downward.get_fast_downward" title="stripstream.algorithms.search.fast_downward.get_fast_downward"><code class="xref py py-func docutils literal"><span class="pre">get_fast_downward()</span></code></a>.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1">#search = get_fast_downward(&#39;eager&#39;) # dijkstra | astar | wastar1 | wastar2 | wastar3 | eager | lazy</span>
+<span class="n">search</span> <span class="o">=</span> <span class="n">get_bfs</span><span class="p">()</span>
+
+<span class="n">plan</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">incremental_planner</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="n">search</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#plan, _ = focused_planner(problem, search=search, greedy=False)</span>
+<span class="nb">print</span>
+<span class="nb">print</span> <span class="s1">&#39;Plan:&#39;</span><span class="p">,</span> <span class="n">convert_plan</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can run this tutorial using the following command.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">scripts</span><span class="o">.</span><span class="n">run_tutorial</span>
+</pre></div>
+</div>
+<span class="target" id="module-scripts.run_tutorial"></span><dl class="function">
+<dt id="scripts.run_tutorial.create_problem">
+<code class="descclassname">scripts.run_tutorial.</code><code class="descname">create_problem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/run_tutorial.html#create_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scripts.run_tutorial.create_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the 1D task and motion planning STRIPStream problem.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <code class="xref py py-class docutils literal"><span class="pre">STRIPStreamProblem</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="scripts.run_tutorial.main">
+<code class="descclassname">scripts.run_tutorial.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/run_tutorial.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scripts.run_tutorial.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and solves the 1D task and motion planning STRIPStream problem.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">Welcome to STRIPStream&#8217;s documentation!</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="stripstream.html">stripstream package</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Caelan Reed Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

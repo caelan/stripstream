@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stripstream.pddl.logic package &#8212; STRIPStream 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="stripstream.pddl.examples package" href="stripstream.pddl.examples.html" />
+    <link rel="prev" title="stripstream.pddl package" href="stripstream.pddl.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>STRIPStream 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>stripstream.pddl.logic package</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="stripstream.pddl.html">stripstream.pddl package</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="stripstream.pddl.examples.html">stripstream.pddl.examples package</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="stripstream-pddl-logic-package">
+<h1>stripstream.pddl.logic package<a class="headerlink" href="#stripstream-pddl-logic-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-stripstream.pddl.logic.atoms">
+<span id="stripstream-pddl-logic-atoms-module"></span><h2>stripstream.pddl.logic.atoms module<a class="headerlink" href="#module-stripstream.pddl.logic.atoms" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="stripstream.pddl.logic.atoms.Equal">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.atoms.</code><code class="descname">Equal</code><span class="sig-paren">(</span><em>arg1</em>, <em>arg2</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/atoms.html#Equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.atoms.Equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Formula</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Condition</span></code></p>
+<p>Equality atom (= O1 O2 ... ON).</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">BLOCK</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">B1</span><span class="p">,</span> <span class="n">B2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">),</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Equal</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arg1</strong> &#8211; the first <code class="xref py py-class docutils literal"><span class="pre">Object</span></code> argument</li>
+<li><strong>arg2</strong> &#8211; the second <code class="xref py py-class docutils literal"><span class="pre">Object</span></code> argument</li>
+<li><strong>*args</strong> &#8211; <p>a list of any remaining <code class="xref py py-class docutils literal"><span class="pre">Object</span></code> arguments</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="stripstream.pddl.logic.atoms.Cost">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.atoms.</code><code class="descname">Cost</code><span class="sig-paren">(</span><em>cost</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/atoms.html#Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.atoms.Cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.atoms.Increase</span></code></p>
+<p>Increase cost atom (increase total-cost F) which extends <code class="xref py py-class docutils literal"><span class="pre">Function</span></code> by
+setting <code class="docutils literal"><span class="pre">function</span></code> to be <code class="xref py py-class docutils literal"><span class="pre">TotalCost()</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cost</strong> &#8211; the numeric or <code class="xref py py-class docutils literal"><span class="pre">Function</span></code> amount that <code class="xref py py-class docutils literal"><span class="pre">TotalCost()</span></code> increases</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.pddl.logic.connectives">
+<span id="stripstream-pddl-logic-connectives-module"></span><h2>stripstream.pddl.logic.connectives module<a class="headerlink" href="#module-stripstream.pddl.logic.connectives" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="stripstream.pddl.logic.connectives.And">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.connectives.</code><code class="descname">And</code><span class="sig-paren">(</span><em>*formulas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/connectives.html#And"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.connectives.And" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.connectives.Connective</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Condition</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Effect</span></code></p>
+<p>Logical conjunction (and P1 P2 ... PN).</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">(),</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">AtPose</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">CollisionFree</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">POSE</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">B2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+<span class="n">P1</span><span class="p">,</span> <span class="n">P2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">POSE</span><span class="p">),</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">POSE</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span><span class="n">AtPose</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">P2</span><span class="p">),</span> <span class="n">CollisionFree</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Logical connective abstract class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>formulas</strong> &#8211; a list of <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="stripstream.pddl.logic.connectives.Or">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.connectives.</code><code class="descname">Or</code><span class="sig-paren">(</span><em>*formulas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/connectives.html#Or"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.connectives.Or" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.connectives.Connective</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Condition</span></code></p>
+<p>Logical disjunction (or P1 P2 ... PN).</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">(),</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">CollisionFree</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">B1</span><span class="p">,</span> <span class="n">B2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">),</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+<span class="n">P1</span><span class="p">,</span> <span class="n">P2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">POSE</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span><span class="n">Equal</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">),</span> <span class="n">Safe</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">P1</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>Logical connective abstract class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>formulas</strong> &#8211; a list of <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="stripstream.pddl.logic.connectives.Not">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.connectives.</code><code class="descname">Not</code><span class="sig-paren">(</span><em>formula</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/connectives.html#Not"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.connectives.Not" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.connectives.Connective</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Condition</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Effect</span></code></p>
+<p>Logical negation (not P).</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">CONF</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">AtConf</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">CONF</span><span class="p">,</span> <span class="n">CONF</span><span class="p">)</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">CONF</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Not</span><span class="p">(</span><span class="n">AtConf</span><span class="p">(</span><span class="n">Q1</span><span class="p">)))</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>formula</strong> &#8211; a <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="stripstream.pddl.logic.connectives.When">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.connectives.</code><code class="descname">When</code><span class="sig-paren">(</span><em>formula1</em>, <em>formula2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/connectives.html#When"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.connectives.When" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.connectives.Connective</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Effect</span></code></p>
+<p>Logical implication (when P1 P2).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>formula1</strong> &#8211; a <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code> for the antecedent</li>
+<li><strong>formula2</strong> &#8211; a <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code> for the consequent</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.pddl.logic.predicates">
+<span id="stripstream-pddl-logic-predicates-module"></span><h2>stripstream.pddl.logic.predicates module<a class="headerlink" href="#module-stripstream.pddl.logic.predicates" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="stripstream.pddl.logic.predicates.EasyPredicate">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.predicates.</code><code class="descname">EasyPredicate</code><span class="sig-paren">(</span><em>*types</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/predicates.html#EasyPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.predicates.EasyPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.predicates.Predicate</span></code></p>
+<p>Anonymous predicate P which extends <code class="xref py py-class docutils literal"><span class="pre">Predicate</span></code>.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">CONF</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">AtConf</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">CONF</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types</strong> &#8211; a list of <code class="xref py py-class docutils literal"><span class="pre">Type</span></code> inputs to the predicate</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="stripstream.pddl.logic.predicates.EasyPredicate.__call__">
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#stripstream.pddl.logic.predicates.EasyPredicate.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <code class="xref py py-class docutils literal"><span class="pre">Atom</span></code> instance from <code class="docutils literal"><span class="pre">args</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> &#8211; a list of hashable arguments to <code class="docutils literal"><span class="pre">self</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Atom</span></code> with predicate <code class="docutils literal"><span class="pre">self</span></code> and wrapped <code class="xref py py-class docutils literal"><span class="pre">Object</span></code> arguments <code class="docutils literal"><span class="pre">args</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; if <code class="docutils literal"><span class="pre">self.types</span></code> does not match the length of <code class="docutils literal"><span class="pre">args</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stripstream.pddl.logic.predicates.EasyFunction">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.predicates.</code><code class="descname">EasyFunction</code><span class="sig-paren">(</span><em>*types</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/predicates.html#EasyFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.predicates.EasyFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.predicates.Function</span></code></p>
+<p>Anonymous function F which extends <code class="xref py py-class docutils literal"><span class="pre">Function</span></code>.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">CONF</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">Distance</span> <span class="o">=</span> <span class="n">EasyFunction</span><span class="p">(</span><span class="n">CONF</span><span class="p">,</span> <span class="n">CONF</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types</strong> &#8211; a list of <code class="xref py py-class docutils literal"><span class="pre">Type</span></code> inputs to the predicate</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="stripstream.pddl.logic.predicates.EasyFunction.__call__">
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#stripstream.pddl.logic.predicates.EasyFunction.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <code class="xref py py-class docutils literal"><span class="pre">Atom</span></code> instance from <code class="docutils literal"><span class="pre">args</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> &#8211; a list of hashable arguments to <code class="docutils literal"><span class="pre">self</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Atom</span></code> with predicate <code class="docutils literal"><span class="pre">self</span></code> and wrapped <code class="xref py py-class docutils literal"><span class="pre">Object</span></code> arguments <code class="docutils literal"><span class="pre">args</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; if <code class="docutils literal"><span class="pre">self.types</span></code> does not match the length of <code class="docutils literal"><span class="pre">args</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.pddl.logic.quantifiers">
+<span id="stripstream-pddl-logic-quantifiers-module"></span><h2>stripstream.pddl.logic.quantifiers module<a class="headerlink" href="#module-stripstream.pddl.logic.quantifiers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="stripstream.pddl.logic.quantifiers.ForAll">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.quantifiers.</code><code class="descname">ForAll</code><span class="sig-paren">(</span><em>args</em>, <em>formula</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/quantifiers.html#ForAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.quantifiers.ForAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.quantifiers.Quantifier</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Condition</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Effect</span></code></p>
+<p>Universal quantifier (forall (X1 X2 ... XN) P).</p>
+<p>Example safe for all blocks formula:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">(),</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">Safe</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">B1</span><span class="p">,</span> <span class="n">B2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">),</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+<span class="n">P1</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">POSE</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">ForAll</span><span class="p">([</span><span class="n">B2</span><span class="p">],</span> <span class="n">Or</span><span class="p">(</span><span class="n">Equal</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">),</span> <span class="n">Safe</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">P1</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>Quantifier abstract class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args</strong> &#8211; a list of <code class="xref py py-class docutils literal"><span class="pre">Parameter</span></code> free variables</li>
+<li><strong>formula</strong> &#8211; the <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code> within the quantifier</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="stripstream.pddl.logic.quantifiers.Exists">
+<em class="property">class </em><code class="descclassname">stripstream.pddl.logic.quantifiers.</code><code class="descname">Exists</code><span class="sig-paren">(</span><em>args</em>, <em>formula</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/pddl/logic/quantifiers.html#Exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.pddl.logic.quantifiers.Exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.quantifiers.Quantifier</span></code>, <code class="xref py py-class docutils literal"><span class="pre">stripstream.pddl.logic.formulas.Condition</span></code></p>
+<p>Existential quantifier (exists (X1 X2 ... XN) P).</p>
+<p>Example collision free for some pose formula:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span> <span class="o">=</span> <span class="n">EasyType</span><span class="p">(),</span> <span class="n">EasyType</span><span class="p">()</span>
+<span class="n">AtPose</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">CollisionFree</span> <span class="o">=</span> <span class="n">EasyPredicate</span><span class="p">(</span><span class="n">POSE</span><span class="p">,</span> <span class="n">POSE</span><span class="p">)</span>
+<span class="n">B2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">BLOCK</span><span class="p">)</span>
+<span class="n">P1</span><span class="p">,</span> <span class="n">P2</span> <span class="o">=</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">POSE</span><span class="p">),</span> <span class="n">EasyParameter</span><span class="p">(</span><span class="n">POSE</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Exists</span><span class="p">([</span><span class="n">P2</span><span class="p">],</span> <span class="n">And</span><span class="p">(</span><span class="n">AtPose</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span> <span class="n">P2</span><span class="p">),</span> <span class="n">CollisionFree</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>Quantifier abstract class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args</strong> &#8211; a list of <code class="xref py py-class docutils literal"><span class="pre">Parameter</span></code> free variables</li>
+<li><strong>formula</strong> &#8211; the <code class="xref py py-class docutils literal"><span class="pre">Formula</span></code> within the quantifier</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.pddl.logic">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stripstream.pddl.logic" title="Permalink to this headline">¶</a></h2>
+<p>This package contains first-order logical operators.</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="stripstream.pddl.html">stripstream.pddl package</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="stripstream.pddl.examples.html">stripstream.pddl.examples package</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Caelan Reed Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

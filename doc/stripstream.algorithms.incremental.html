@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stripstream.algorithms.incremental package &#8212; STRIPStream 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="stripstream.algorithms.focused package" href="stripstream.algorithms.focused.html" />
+    <link rel="prev" title="stripstream.algorithms package" href="stripstream.algorithms.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>STRIPStream 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>stripstream.algorithms.incremental package</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="stripstream.algorithms.html">stripstream.algorithms package</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="stripstream.algorithms.focused.html">stripstream.algorithms.focused package</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="stripstream-algorithms-incremental-package">
+<h1>stripstream.algorithms.incremental package<a class="headerlink" href="#stripstream-algorithms-incremental-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-stripstream.algorithms.incremental.incremental_planner">
+<span id="stripstream-algorithms-incremental-incremental-planner-module"></span><h2>stripstream.algorithms.incremental.incremental_planner module<a class="headerlink" href="#module-stripstream.algorithms.incremental.incremental_planner" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="stripstream.algorithms.incremental.incremental_planner.incremental_planner">
+<code class="descclassname">stripstream.algorithms.incremental.incremental_planner.</code><code class="descname">incremental_planner</code><span class="sig-paren">(</span><em>problem</em>, <em>search=&lt;function &lt;lambda&gt;&gt;</em>, <em>max_time=inf</em>, <em>max_iterations=inf</em>, <em>max_calls=inf</em>, <em>waves=True</em>, <em>frequency=1</em>, <em>optimal=False</em>, <em>verbose=False</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stripstream/algorithms/incremental/incremental_planner.html#incremental_planner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stripstream.algorithms.incremental.incremental_planner.incremental_planner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incremental algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>problem</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">STRIPStreamProblem</span></code></li>
+<li><strong>search</strong> &#8211; python function of the search subroutine</li>
+<li><strong>max_time</strong> &#8211; numeric maximum planning time</li>
+<li><strong>max_iterations</strong> &#8211; int maximum subroutine calls</li>
+<li><strong>waves</strong> &#8211; boolean flag when <code class="docutils literal"><span class="pre">True</span></code> considers each stream evaluation iteration to be the current queue rather than a single stream</li>
+<li><strong>frequency</strong> &#8211; numeric number of evaluation iterations given by <code class="docutils literal"><span class="pre">waves</span></code> (<code class="docutils literal"><span class="pre">float('inf')</span></code> implies to evaluate all streams per iteration)</li>
+<li><strong>optimal</strong> &#8211; boolean flag which saves the best current solution</li>
+<li><strong>verbose</strong> &#8211; boolean flag which toggles the print output</li>
+<li><strong>debug</strong> &#8211; boolean flag which prints the objects on each iteration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a sequence of <a class="reference internal" href="stripstream.pddl.html#stripstream.pddl.operators.Action" title="stripstream.pddl.operators.Action"><code class="xref py py-class docutils literal"><span class="pre">Action</span></code></a> and tuple of <code class="xref py py-class docutils literal"><span class="pre">Constant</span></code> pairs as well as <code class="xref py py-class docutils literal"><span class="pre">Universe</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stripstream.algorithms.incremental">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stripstream.algorithms.incremental" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="stripstream.algorithms.html">stripstream.algorithms package</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="stripstream.algorithms.focused.html">stripstream.algorithms.focused package</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Caelan Reed Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>
