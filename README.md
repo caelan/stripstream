@@ -32,6 +32,16 @@ https://fai.cs.uni-saarland.de/hoffmann/ff.html
 I use FF-v2.3 and FF-X (supports derived predicates). Once installed, set the environment variable FF_PATH to be the root of the FastForward installation.
 It should look similar to ```.../FF-v2.3/``` or ```.../FF-X/```.
 
+## Tutorial
+
+The following tutorial implements a countable task and motion planning (TAMP) problem:
+
+https://github.mit.edu/pages/caelan/stripstream/tutorial.html
+
+You can run this tutorial using the following command:
+
+```python -m scripts.run_tutorial```
+
 ## Examples
 
 The following scripts contain example STRIPStream formulations:
@@ -62,8 +72,7 @@ Additional tests will be added in the future.
 
 ## Publications
 
-STRIPS Planning in Infinite Domains
-https://arxiv.org/abs/1701.00287
+STRIPS Planning in Infinite Domains - https://arxiv.org/abs/1701.00287
 
 ## Citation
 
