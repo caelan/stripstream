@@ -10,6 +10,12 @@ https://caelan.github.io/stripstream/
 
 http://web.mit.edu/caelan/www/research/stripstream/
 
+## Optional Dependencies
+
+Tkinter - https://wiki.python.org/moin/TkInter
+
+OpenRAVE - http://openrave.org/
+
 ## Search Subroutines
 
 STRIPStream optionally supports using arbitrary PDDL planners to implement the ```search``` subroutine. The following planners are currently supported. Additional planners will be added in the future. Contact me if you are interested in supporting a new planner. The default ```search``` subroutine implementation uses a slow Python Breadth-First Search (BFS), so installing one of these planners is highly recommended.
