@@ -12,6 +12,8 @@ http://web.mit.edu/caelan/www/research/stripstream/
 
 ## Optional Dependencies
 
+NumPy - http://www.numpy.org/
+
 Tkinter - https://wiki.python.org/moin/TkInter
 
 OpenRAVE - http://openrave.org/
