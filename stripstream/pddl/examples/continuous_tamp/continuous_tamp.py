@@ -1,5 +1,3 @@
-from stripstream.pddl.examples.continuous_tamp.continuous_tamp_viewer import ContinuousTMPViewer
-
 from stripstream.pddl.logic.connectives import Not, Or, And
 from stripstream.pddl.logic.quantifiers import Exists, ForAll
 from stripstream.pddl.logic.atoms import Equal
@@ -145,6 +143,7 @@ def visualize_atoms(viewer, atoms):
 
 
 def visualize_initial(tamp_problem, planning_problem):
+    from stripstream.pddl.examples.continuous_tamp.continuous_tamp_viewer import ContinuousTMPViewer
     viewer = ContinuousTMPViewer(
         tamp_problem.env_region, tamp_problem.get_regions(), title='Initial')
     visualize_atoms(viewer, planning_problem.initial_atoms)
@@ -152,6 +151,7 @@ def visualize_initial(tamp_problem, planning_problem):
 
 
 def visualize_goal(tamp_problem, planning_problem):
+    from stripstream.pddl.examples.continuous_tamp.continuous_tamp_viewer import ContinuousTMPViewer
     viewer = ContinuousTMPViewer(
         tamp_problem.env_region, tamp_problem.get_regions(), tl_y=300, title='Goal')
     visualize_atoms(viewer, planning_problem.goal_literals)

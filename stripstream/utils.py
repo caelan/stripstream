@@ -1,7 +1,6 @@
 import os
 import random
 import shutil
-import numpy
 import pickle
 from random import shuffle
 
@@ -19,6 +18,7 @@ def header(s, n=10):
 
 def set_deterministic(seed=0):
     random.seed(seed)
+    import numpy
     numpy.random.seed(seed)
 
 

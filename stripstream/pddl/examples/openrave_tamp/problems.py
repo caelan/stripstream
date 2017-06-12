@@ -8,10 +8,13 @@ import os
 import numpy as np
 import math
 
-from openrave_tamp_utils import set_base_conf, Pose, box_body,  set_manipulator_conf, mirror_arm_config, open_gripper, close_gripper, top_grasps, Grasp
+from openrave_tamp_utils import set_base_conf, Pose, box_body, get_name,  set_manipulator_conf, mirror_arm_config, open_gripper, close_gripper, top_grasps, Grasp,  SURFACE_Z_OFFSET, compute_surface
 from transforms import pose_from_quat_point, set_pose, unit_quat
 
-BODY_PLACEMENT_Z_OFFSET = 1e-3
+TOP_HOLDING_LEFT_ARM = [0.67717021, -0.34313199,
+                        1.2, -1.46688405, 1.24223229, -1.95442826, 2.22254125]
+REST_LEFT_ARM = [2.13539289, 1.29629967, 3.74999698, -
+                 0.15000005, 10000., -0.10000004, 10000.]
 
 PROBLEMS_DIR = os.path.dirname(os.path.abspath(getfile(currentframe())))
 ENVIRONMENTS_DIR = os.path.join(PROBLEMS_DIR, 'environments')
@@ -31,10 +34,46 @@ CYAN = np.array((0, 1, 1, 0))
 TAN = np.array((255, 165, 79, 0)) / 255.0
 
 
-TOP_HOLDING_LEFT_ARM = [0.67717021, -0.34313199,
-                        1.2, -1.46688405, 1.24223229, -1.95442826, 2.22254125]
-REST_LEFT_ARM = [2.13539289, 1.29629967, 3.74999698, -
-                 0.15000005, 10000., -0.10000004, 10000.]
+class RealProblem(object):
+
+    def __init__(self, movable_names=[], surfaces=[], goal_surfaces={}):
+        self.movable_names = movable_names
+        self.surfaces = surfaces
+        self.goal_surfaces = goal_surfaces
+
+    def __str__(self):
+        s = self.__class__.__name__ + '\n'
+        for name, value in self.__dict__.iteritems():
+            s += name + ': %s\n' % str(value)
+        return s
+    __repr__ = __str__
+
+
+def simple(env):
+    env.Load(os.path.join(ENVIRONMENTS_DIR, '2tables.xml'))
+
+    fixed_names = map(get_name, env.GetBodies())
+    tables = filter(lambda body: 'table' in get_name(body), env.GetBodies())
+    surfaces = map(compute_surface, tables)
+    surface_map = {s.name: s for s in surfaces}
+
+    objA = box_body(env, 'objA', .07, .05, .2, color=BLUE)
+    env.Add(objA)
+    while True:
+        pose = surface_map['table1'].sample_placement(objA)
+        if pose is not None:
+            set_pose(objA, pose)
+            break
+
+    goal_surfaces = {
+        get_name(objA): 'table2',
+    }
+
+    movable_names = filter(
+        lambda name: name not in fixed_names, map(get_name, env.GetBodies()))
+
+    return RealProblem(movable_names=movable_names,
+                       surfaces=surfaces, goal_surfaces=goal_surfaces)
 
 
 class ManipulationProblem(object):
@@ -93,7 +132,7 @@ def dantam_distract(env, n_obj):
     set_base_conf(robot, (-.75, .2, -math.pi / 2))
 
     poses = []
-    z = height + BODY_PLACEMENT_Z_OFFSET
+    z = height + SURFACE_Z_OFFSET
     for r in range(m):
         row = []
         x = -length / 2 + (r + .5) * (box_dims[0] + separation[0])

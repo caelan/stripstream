@@ -2,13 +2,16 @@ from openravepy import rotationMatrixFromAxisAngle, Sensor, RaveCreateCollisionC
 from openravepy.misc import SetViewerUserThread
 
 from itertools import count
-from transforms import quat_from_axis_angle, trans_from_pose, manip_trans_from_object_trans,  length, normalize, trans_from_point,  trans_from_quat, trans_from_axis_angle, get_active_config, set_active_config
+from transforms import quat_from_axis_angle, trans_from_pose, manip_trans_from_object_trans,  length, normalize, trans_from_point, set_pose, get_point,  trans_from_quat, trans_from_axis_angle, get_active_config, set_active_config, set_quat,  pose_from_quat_point, set_trans
+from stripstream.utils import irange, INF
+from random import uniform
 
 import math
 import numpy as np
 import sys
 
 MIN_DELTA = 0.01
+SURFACE_Z_OFFSET = 1e-3
 
 
 class Wrapper(object):
@@ -35,6 +38,10 @@ class Grasp(Wrapper):
 
 class Traj(Wrapper):
     _ids = count(0)
+
+
+def get_name(body):
+    return str(body.GetName())
 
 
 def get_geometries(body):
@@ -100,6 +107,29 @@ def open_gripper(manipulator):
 def close_gripper(manipulator):
     lower, _ = manipulator.GetRobot().GetDOFLimits(manipulator.GetGripperIndices())
     set_gripper(manipulator, lower)
+
+
+def random_inverse_reachability(ir_model, manip_trans):
+    print ir_model.__dict__
+    raw_input('awfaawef')
+    index_manip_iterator = [(manip_trans, manip_trans)]
+    try:
+        for base_trans, _, _ in ir_model.randomBaseDistributionIterator(index_manip_iterator):
+            set_trans(ir_model.robot, base_trans)
+            yield base_trans
+    except (ValueError, planning_error):
+        raise StopIteration
+
+
+def openrave_inverse_reachability(ir_model, manip_trans):
+    index_manip_iterator = [(manip_trans, manip_trans)]
+    try:
+        for base_trans, _, _ in ir_model.sampleBaseDistributionIterator(index_manip_iterator, logllthresh=-INF, Nprematuresamples=1):
+            set_trans(ir_model.robot, base_trans)
+
+            yield base_trans
+    except (ValueError, planning_error):
+        raise StopIteration
 
 
 def solve_inverse_kinematics(manipulator, manip_trans):
@@ -198,8 +228,17 @@ def initialize_openrave(env, manipulator_name, min_delta=MIN_DELTA, collision_ch
     ikmodel = databases.inversekinematics.InverseKinematicsModel(robot=robot, iktype=IkParameterization.Type.Transform6D,
                                                                  forceikfast=True, freeindices=None, freejoints=None, manip=None)
     if not ikmodel.load():
+        print 'Generating IK model'
         ikmodel.autogenerate()
-    return robot, manipulator
+
+    base_manip = interfaces.BaseManipulation(
+        robot, plannername=None, maxvelmult=None)
+    ir_model = databases.inversereachability.InverseReachabilityModel(robot)
+    if ir_model.load():
+        print 'Generating IR model'
+        ir_model.autogenerate()
+
+    return robot, manipulator, base_manip, ir_model
 
 
 def collision_saver(env, options):
@@ -249,3 +288,61 @@ def workspace_motion_plan(base_manip, manipulator, vector, steps=10):
                 return list(sample_manipulator_trajectory(manipulator, traj))
             except planning_error:
                 return None
+
+
+def aabb_min(aabb): return aabb.pos() - aabb.extents()
+
+
+def aabb_max(aabb): return aabb.pos() + aabb.extents()
+
+
+class AASurface(object):
+
+    def __init__(self, name, xy_min, xy_max, z, color=(0, 0, 0, .25)):
+        self.xy_min = xy_min
+        self.xy_max = xy_max
+        self.z = z
+        self.name = name
+        self.color = color
+
+    def supports(self, body):
+        aabb = body.ComputeAABB()
+        return np.all(self.xy_min <= aabb_min(aabb)[:2]) and np.all(aabb_max(aabb)[:2] <= self.xy_max) and abs(aabb_min(aabb)[2] - self.z) < 1e-6
+
+    def sample_placement(self, body, max_attempts=10):
+        with body.CreateKinBodyStateSaver():
+            for _ in irange(0, max_attempts):
+                quat = quat_from_axis_angle(0, 0, uniform(0, 2 * math.pi))
+                set_quat(body, quat)
+                aabb = body.ComputeAABB()
+                low = self.xy_min + aabb.extents()[:2]
+                high = self.xy_max - aabb.extents()[:2]
+                if np.any(low >= high):
+                    continue
+                xy = (high - low) * np.random.rand(*low.shape) + low
+                z = self.z + aabb.extents()[2]
+                point = np.concatenate([xy, [z]]) + \
+                    (get_point(body) - aabb.pos())
+                pose = pose_from_quat_point(quat, point)
+
+                return pose
+
+        return None
+
+    def draw(self, env):
+        self.draw_handle = env.drawtrimesh(points=np.array((
+            (self.xy_min[0], self.xy_min[1],
+             self.z), (self.xy_min[0], self.xy_max[1], self.z),
+            (self.xy_max[0], self.xy_max[1], self.z), (self.xy_max[0], self.xy_min[1], self.z))),
+            indices=np.array(((0, 1, 2), (0, 3, 2)), np.int64), colors=np.array((self.color)))
+
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, self.name)
+
+
+def compute_surface(body):
+    aabb = body.ComputeAABB()
+    return AASurface(get_name(body),
+                     aabb_min(aabb)[:2],
+                     aabb_max(aabb)[:2],
+                     aabb_max(aabb)[2] + SURFACE_Z_OFFSET)

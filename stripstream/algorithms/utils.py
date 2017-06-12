@@ -2,7 +2,15 @@ from stripstream.algorithms.search.fast_downward import get_fast_downward, has_f
 from stripstream.algorithms.search.fast_forward import get_fast_forward, has_ff
 from stripstream.algorithms.search.lapkt import get_lakpt, has_lapkt
 
-BFS, FAST_DOWNWARD, FAST_FORWARD, LAPKT, PYPLANNERS = 'bfs', 'fd', 'ff', 'lapkt', 'pyplanners'
+
+DEFAULT = 'default'
+BFS = 'bfs'
+FAST_DOWNWARD = 'fd'
+FAST_FORWARD = 'ff'
+LAPKT = 'lapkt'
+PYPLANNERS = 'pyplanners'
+
+
 INCREMENTAL, FOCUSED = 'incremental', 'focused'
 
 DEFAULT_SEARCH_NAME = BFS

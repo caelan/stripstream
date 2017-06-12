@@ -8,7 +8,7 @@ from stripstream.algorithms.focused.simple_focused import simple_focused
 from stripstream.algorithms.search.bfs import get_bfs
 from stripstream.algorithms.search.fast_downward import get_fast_downward
 from stripstream.pddl.utils import convert_plan
-from stripstream.algorithms.utils import BFS, FAST_DOWNWARD, INCREMENTAL, FOCUSED
+from stripstream.algorithms.utils import DEFAULT, BFS, FAST_DOWNWARD, INCREMENTAL, FOCUSED, DEFAULT_SEARCH
 from stripstream.utils import SEPARATOR
 
 # from stripstream.pddl.examples.continuous_tamp.old_continuous_tamp import compile_problem, \
@@ -38,7 +38,9 @@ def solve_continuous_tamp(planner, search, visualize, display, verbose=False, de
         raw_input('Continue?')
         # viewer.save('initial')
 
-    if search == BFS:
+    if search == DEFAULT:
+        search_fn = DEFAULT_SEARCH
+    elif search == BFS:
         search_fn = get_bfs()
     elif search == FAST_DOWNWARD:
         # 'dijkstra | astar | wastar1 | wastar2 | wastar3 | eager | lazy
@@ -87,7 +89,7 @@ def solve_continuous_tamp(planner, search, visualize, display, verbose=False, de
 
 def main():
     parser = argparse.ArgumentParser()  # Automatically includes help
-    parser.add_argument('-fd', action='store_true', help='FastDownward.')
+    parser.add_argument('--search', help='problem name.', default=DEFAULT)
     parser.add_argument('-focus', action='store_true', help='focused.')
     parser.add_argument('-viewer', action='store_true', help='enable viewer.')
     parser.add_argument('-display', action='store_true',
@@ -95,8 +97,7 @@ def main():
     args = parser.parse_args()
 
     planner = FOCUSED if args.focus else INCREMENTAL
-    search = FAST_DOWNWARD if args.fd else BFS
-    solve_continuous_tamp(planner, search, args.viewer, args.display)
+    solve_continuous_tamp(planner, args.search, args.viewer, args.display)
 
 if __name__ == '__main__':
     main()

@@ -15,8 +15,9 @@ from manipulation.motion.single_query import vector_traj_helper
 from stripstream.pddl.examples.openrave_tamp.openrave_tamp_utils import open_gripper, solve_inverse_kinematics, \
     set_manipulator_conf, Conf, Traj, initialize_openrave, \
     sample_manipulator_trajectory, manip_from_pose_grasp, execute_viewer, \
-    manipulator_motion_plan, linear_motion_plan
-from stripstream.pddl.examples.openrave_tamp.transforms import set_pose, object_trans_from_manip_trans, trans_from_point
+    manipulator_motion_plan, linear_motion_plan, compute_surface
+from stripstream.pddl.examples.openrave_tamp.transforms import set_pose, \
+    object_trans_from_manip_trans, trans_from_point
 
 from stripstream.pddl.objects import EasyType, EasyParameter
 from stripstream.pddl.logic.predicates import EasyPredicate
@@ -127,12 +128,8 @@ def solve_tamp(env):
     viewer = env.GetViewer() is not None
     problem = PROBLEM(env)
 
-    robot = env.GetRobots()[0]
-    initialize_openrave(env, ARM, min_delta=.01)
-    manipulator = robot.GetActiveManipulator()
-    base_manip = interfaces.BaseManipulation(
-        robot, plannername=None, maxvelmult=None)
-
+    robot, manipulator, base_manip, _ = initialize_openrave(
+        env, ARM, min_delta=.01)
     bodies = {obj: env.GetKinBody(obj) for obj in problem.object_names}
     all_bodies = bodies.values()
     # NOTE - assuming all objects has the same geometry
