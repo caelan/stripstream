@@ -1,8 +1,13 @@
 from collections import namedtuple
 from random import random
 from time import sleep
-from stripstream.pddl.examples.continuous_tamp.continuous_tamp_viewer import SUCTION_WIDTH
 from stripstream.utils import random_sequence, irange
+
+
+SUCTION_WIDTH = 1.5
+SUCTION_HEIGHT = 1.
+STEM_WIDTH = 1.
+STEM_HEIGHT = 2.5
 
 
 EPSILON = (SUCTION_WIDTH - 1.) / 2

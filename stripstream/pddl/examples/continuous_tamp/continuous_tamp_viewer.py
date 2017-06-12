@@ -1,13 +1,10 @@
 from Tkinter import Tk, Canvas, Toplevel
 
 
+from stripstream.pddl.examples.continuous_tamp.continuous_tamp_utils import SUCTION_WIDTH, SUCTION_HEIGHT, STEM_WIDTH,  STEM_HEIGHT
+
 PIXEL_BUFFER = 10
 ENV_HEIGHT = 1.
-
-SUCTION_WIDTH = 1.5
-SUCTION_HEIGHT = 1.
-STEM_WIDTH = 1.
-STEM_HEIGHT = 2.5
 
 
 class ContinuousTMPViewer(object):
@@ -98,12 +95,12 @@ class ContinuousTMPViewer(object):
         self.robot = [
             self.canvas.create_rectangle(self.t_x(x - SUCTION_WIDTH / 2.), self.t_y(self.robot_dist - SUCTION_HEIGHT / 2.),
                                          self.t_x(
-                                             x + SUCTION_WIDTH / 2.), self.t_y(self.robot_dist + SUCTION_HEIGHT / 2.),
-                                         fill=color, outline='black', width=2),
+                x + SUCTION_WIDTH / 2.), self.t_y(self.robot_dist + SUCTION_HEIGHT / 2.),
+                fill=color, outline='black', width=2),
             self.canvas.create_rectangle(self.t_x(x - STEM_WIDTH / 2.), self.t_y(self.robot_dist + SUCTION_HEIGHT / 2.),
                                          self.t_x(
-                                             x + STEM_WIDTH / 2.), self.t_y(self.robot_dist + SUCTION_HEIGHT / 2. + STEM_HEIGHT),
-                                         fill=color, outline='black', width=2),
+                x + STEM_WIDTH / 2.), self.t_y(self.robot_dist + SUCTION_HEIGHT / 2. + STEM_HEIGHT),
+                fill=color, outline='black', width=2),
         ]
 
     def clear_state(self):
