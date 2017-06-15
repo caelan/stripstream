@@ -4,18 +4,17 @@ import argparse
 import sys
 
 from openravepy import RaveSetDebugLevel, DebugLevel, Environment, RaveDestroy, databases, interfaces
-from stripstream.algorithms.incremental.incremental_planner import incremental_planner
+#from stripstream.algorithms.incremental.incremental_planner import incremental_planner
 from stripstream.algorithms.focused.simple_focused import simple_focused
 from stripstream.algorithms.search.fast_downward import get_fast_downward
 from stripstream.pddl.utils import convert_plan
 
 from stripstream.pddl.examples.openrave_tamp.problems import dantam_distract
 
-from manipulation.motion.single_query import vector_traj_helper
+#from manipulation.motion.single_query import vector_traj_helper
 from stripstream.pddl.examples.openrave_tamp.openrave_tamp_utils import open_gripper, solve_inverse_kinematics, \
-    set_manipulator_conf, Conf, Traj, initialize_openrave, \
-    sample_manipulator_trajectory, manip_from_pose_grasp, execute_viewer, \
-    manipulator_motion_plan, linear_motion_plan, compute_surface
+    set_manipulator_conf, Conf, Traj, initialize_openrave, manip_from_pose_grasp, execute_viewer, \
+    manipulator_motion_plan, linear_motion_plan
 from stripstream.pddl.examples.openrave_tamp.transforms import set_pose, \
     object_trans_from_manip_trans, trans_from_point
 
