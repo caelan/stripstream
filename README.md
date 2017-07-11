@@ -1,6 +1,10 @@
 # stripstream
 
-STRIPStream is a Python library containing both a language for modeling planning problems in infinite domains and algorithms for solving these problems.
+STRIPStream is a Python library containing languages for modeling planning problems in infinite domains and algorithms for solving these problems. 
+
+STRIPStream includes two representation languages: the STRIPStream language and the Factored Transition System (FTS) Language. The STRIPStream language is a programmatic extension of PDDL (Planning Domain Definition Language). STRIPStream problem formluations are in ```scripts/```. 
+
+The FTS Language is a way of describing transition systems factorable into state and control variables as well as constrains on these variabes. FTS problem formluations are in ```fts_scripts/```. FTS problems are automatically compiled into STRIPStream problem instances and solved using the same set of algorithms. I recommend using STRIPStream over FTS when modeling problems as it is more flexible. 
 
 STRIPStream is still in development. Additional documentation and examples will be added shortly. In particular, several robotics examples using OpenRAVE and an in-house, standalone Python robotics simulator are on the way.
 
@@ -16,7 +20,11 @@ NumPy - http://www.numpy.org/
 
 Tkinter - https://wiki.python.org/moin/TkInter
 
-OpenRAVE - http://openrave.org/
+OpenRAVE - http://openrave.org/, https://github.com/rdiankov/openrave
+
+### Virtual Machine
+
+I've provided a VMWare virtual machine (VM) that has STRIPStream, FastDownward, NumPy, Tkinter, and OpenRAVE installed on it. Remember to periodically pull STRIPStream and the other libraries to obtain the lastest version. The VM username is ss-or, and the password is also ss-or. 
 
 ## Search Subroutines
 
@@ -50,17 +58,49 @@ You can run this tutorial using the following command:
 
 ```python -m scripts.run_tutorial```
 
-## Examples
+## Pure Python Examples
 
-The following scripts contain example STRIPStream formulations:
+The following scripts contain example STRIPStream formulations that soley use Python:
 
+STRIPStream
 ```
 python -m scripts.run_tutorial
 python -m scripts.run_pddl_tutorial
-python -m scripts.blocksworld
+python -m scripts.run_blocksworld
 python -m scripts.run_countable_tamp [--search SEARCH]  [-focus] [-viewer] [-display]
 python -m scripts.run_continuous_tamp [-fd] [-focus] [-viewer] [-display]
+python -m fts_scripts.run_prm
 ```
+
+FTS
+```
+python -m fts_scripts.run_tutorial
+python -m fts_scripts.run_prm
+```
+
+## OpenRAVE Examples
+
+The following scripts contain example STRIPStream formulations using OpenRAVE:
+
+STRIPStream
+```
+python -m scripts.run_openrave_tamp_fixed_base
+```
+
+FTS
+```
+python -m fts_scripts.run_openrave_tamp_fixed_base
+```
+
+### OpenRAVE Installation
+
+OpenRAVE can be difficult to install. OpenRAVE only reliably supports Ubuntu. See the following blog posts for Ubuntu intallation instructions. I recommend building from master in order to take advantage of the latest improvements.
+
+Installing OpenRAVE on Ubuntu 14.04 - https://scaron.info/teaching/installing-openrave-on-ubuntu-14.04.html
+
+Installing OpenRAVE on Ubuntu 16.04 - https://scaron.info/teaching/installing-openrave-on-ubuntu-16.04.html
+
+Installing OpenRAVE in Ubuntu 14.04 (Trusty) - http://fsuarez6.github.io/blog/openrave-trusty/
 
 ## Testing
 
@@ -82,6 +122,11 @@ Additional tests will be added in the future.
 
 STRIPS Planning in Infinite Domains - https://arxiv.org/abs/1701.00287
 
-## Citation
+Sample-Based Methods for Factored Task and Motion Planning - http://web.mit.edu/caelan/www/publications/rss2017.pdf
 
-Caelan R. Garrett, Tomas Lozano-Perez, Leslie P. Kaelbling. STRIPS Planning in Infinite Domains, ICAPS Workshop on Planning and Robotics (PlanRob), 2017.
+## Citations
+
+Caelan R. Garrett, Tomás Lozano-Pérez, Leslie P. Kaelbling. STRIPS Planning in Infinite Domains, ICAPS Workshop on Planning and Robotics (PlanRob), 2017.
+
+Caelan R. Garrett, Tomás Lozano-Pérez, Leslie P. Kaelbling. Sample-Based Methods for Factored Task and Motion Planning, Robotics: Science and Systems (RSS), 2017.
+
