@@ -26,6 +26,8 @@ OpenRAVE - http://openrave.org/, https://github.com/rdiankov/openrave
 
 I've provided a VMWare virtual machine (VM) that has STRIPStream, FastDownward, NumPy, Tkinter, and OpenRAVE installed on it. Remember to periodically pull STRIPStream and the other libraries to obtain the lastest version. The VM username is ss-or, and the password is also ss-or. 
 
+https://www.dropbox.com/sh/ugk8qhsfgac7oe7/AABu-AEubNFN-upgBTVnWuIHa?dl=0
+
 ## Search Subroutines
 
 STRIPStream optionally supports using arbitrary PDDL planners to implement the ```search``` subroutine. The following planners are currently supported. Additional planners will be added in the future. Contact me if you are interested in supporting a new planner. The default ```search``` subroutine implementation uses a slow Python Breadth-First Search (BFS), so installing one of these planners is highly recommended.
@@ -69,7 +71,6 @@ python -m scripts.run_pddl_tutorial
 python -m scripts.run_blocksworld
 python -m scripts.run_countable_tamp [--search SEARCH]  [-focus] [-viewer] [-display]
 python -m scripts.run_continuous_tamp [-fd] [-focus] [-viewer] [-display]
-python -m fts_scripts.run_prm
 ```
 
 FTS
@@ -84,12 +85,12 @@ The following scripts contain example STRIPStream formulations using OpenRAVE:
 
 STRIPStream
 ```
-python -m scripts.run_openrave_tamp_fixed_base
+python -m scripts.run_openrave_tamp_fixed_base [-viewer]
 ```
 
 FTS
 ```
-python -m fts_scripts.run_openrave_tamp_fixed_base
+python -m fts_scripts.run_openrave_tamp_fixed_base [-viewer]
 ```
 
 ### OpenRAVE Installation
