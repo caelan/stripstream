@@ -170,5 +170,5 @@ class STRIPStreamProblem(object):
         return self.get_predicates() - self.get_fluent_predicates() - self.get_derived_predicates() - self.get_stream_predicates()
 
     def __repr__(self):
-        return 'Initial: %s\n'           'Goal: %s\n'           'Operators: %s\n'           'Streams: %s\n'           'Constants: %s' % (self.initial_atoms, self.goal_literals,
-                                                                                                                                         self.operators, self.cond_streams, self.objects)
+        return 'STRIPStream Problem\n'           'Initial: %s\n'           'Goal: %s\n'           'Operators: %s\n'           'Streams: %s\n'           'Constants: %s' % (self.initial_atoms, self.goal_literals,
+                                                                                                                                                                           self.operators, self.cond_streams, self.objects)

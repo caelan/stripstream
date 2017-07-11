@@ -10,7 +10,7 @@ import math
 import numbers
 
 DEFAULT_COST = 1
-TEST_COST = None
+TEST_COST = 0
 PLAN_TIME = 1.
 
 
@@ -218,7 +218,7 @@ class EasyGenStream(CondStream):
 
         if not callable(generator):
             raise ValueError(
-                'EasyTestStream expects generator to be a function: %s' % generator)
+                'EasyGenStream expects generator to be a function: %s' % generator)
         self.generator = generator
 
     class StreamFn(GeneratorStream):
@@ -281,8 +281,8 @@ class EasyTestStream(CondStream):
         :param test: a function from values for ``inputs`` to ``{False, True}``
         :param kwargs: keyword arguments for :class:`.ConditionalStream`
         """
-        super(EasyTestStream, self).__init__(
-            inputs, [], conditions, effects, **kwargs)
+        super(EasyTestStream, self).__init__(inputs, [],
+                                             conditions, effects, cost=TEST_COST, **kwargs)
         if not callable(test):
             raise ValueError(
                 'EasyTestStream expects test to be a function: %s' % test)
