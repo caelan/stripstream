@@ -26,7 +26,7 @@ OpenRAVE - http://openrave.org/, https://github.com/rdiankov/openrave
 
 I've provided a VMWare virtual machine (VM) that has STRIPStream, FastDownward, NumPy, Tkinter, and OpenRAVE installed on it. Remember to periodically pull STRIPStream and the other libraries to obtain the lastest version. The VM username is ss-or, and the password is also ss-or. 
 
-https://www.dropbox.com/sh/ugk8qhsfgac7oe7/AABu-AEubNFN-upgBTVnWuIHa?dl=0
+https://www.dropbox.com/sh/g7dbz3sdiv8zknn/AAD705L2YbB0ortsKPNY7WiZa?dl=0
 
 ## Search Subroutines
 
