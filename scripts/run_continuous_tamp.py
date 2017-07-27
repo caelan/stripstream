@@ -11,6 +11,8 @@ from stripstream.pddl.utils import convert_plan
 from stripstream.algorithms.utils import DEFAULT, BFS, FAST_DOWNWARD, INCREMENTAL, FOCUSED, DEFAULT_SEARCH
 from stripstream.utils import SEPARATOR
 
+# NOTE - this is like top grasps
+
 # from stripstream.pddl.examples.continuous_tamp.old_continuous_tamp import compile_problem, \
 #  visualize_initial, visualize_goal, visualize_atoms, generative_streams, constant_streams, implicit_streams
 from stripstream.pddl.examples.continuous_tamp.continuous_tamp_utils import sample_tamp_problem

@@ -229,8 +229,6 @@ class EasyGenStream(CondStream):
 
             for i, outputs in enumerate(sequence):
 
-                if type(outputs) != list:
-                    outputs = [outputs]
                 if len(outputs) != len(self.cond_stream.outputs):
                     raise ValueError('Expected generator output %s to be the same length as conditional stream inputs %s' % (
                         outputs, self.cond_stream.outputs))

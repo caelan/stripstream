@@ -18,8 +18,8 @@ SEARCH_OUTPUT = 'sas_plan'
 
 
 search_options = {
-    'dijkstra': '--heuristic "h=blind(transform=adapt_costs(cost_type=PLUSONE))" --search "astar([h],max_time=%s,bound=%s)"',
-    'astar': '--heuristic "h=hmax(transform=adapt_costs(cost_type=PLUSONE))" --search "astar([h],max_time=%s,bound=%s)"',
+    'dijkstra': '--heuristic "h=blind(transform=adapt_costs(cost_type=PLUSONE))" --search "astar(h,max_time=%s,bound=%s)"',
+    'astar': '--heuristic "h=hmax(transform=adapt_costs(cost_type=PLUSONE))" --search "astar(h,max_time=%s,bound=%s)"',
     'wastar1': '--heuristic "hlm,hff=lm_ff_syn(lm_rhw(reasonable_orders=true,lm_cost_type=plusone),transform=adapt_costs(cost_type=PLUSONE))" '
     '--search "lazy_wastar([hff,hlm],preferred=[hff,hlm],w=1,max_time=%s,bound=%s)"',
     'wastar2': '--heuristic "hlm,hff=lm_ff_syn(lm_rhw(reasonable_orders=true,lm_cost_type=plusone),transform=adapt_costs(cost_type=PLUSONE))" '

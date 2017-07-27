@@ -13,6 +13,8 @@ from transforms import pose_from_quat_point, set_pose, unit_quat
 
 TOP_HOLDING_LEFT_ARM = [0.67717021, -0.34313199,
                         1.2, -1.46688405, 1.24223229, -1.95442826, 2.22254125]
+SIDE_HOLDING_LEFT_ARM = [0.39277395, 0.33330058,
+                         0., -1.52238431, 2.72170996, -1.21946936, -2.98914779]
 REST_LEFT_ARM = [2.13539289, 1.29629967, 3.74999698, -
                  0.15000005, 10000., -0.10000004, 10000.]
 
@@ -56,6 +58,15 @@ def simple(env):
     tables = filter(lambda body: 'table' in get_name(body), env.GetBodies())
     surfaces = map(compute_surface, tables)
     surface_map = {s.name: s for s in surfaces}
+
+    robot = env.GetRobots()[0]
+    set_manipulator_conf(robot.GetManipulator('leftarm'), REST_LEFT_ARM)
+    open_gripper(robot.GetManipulator('leftarm'))
+    set_manipulator_conf(robot.GetManipulator('rightarm'),
+                         mirror_arm_config(robot, REST_LEFT_ARM))
+    close_gripper(robot.GetManipulator('rightarm'))
+    robot.SetDOFValues([.15], [robot.GetJointIndex('torso_lift_joint')])
+    set_base_conf(robot, (0, 0, 0))
 
     objA = box_body(env, 'objA', .07, .05, .2, color=BLUE)
     env.Add(objA)

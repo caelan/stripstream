@@ -1,5 +1,7 @@
 from stripstream.utils import INF
 
+NUM_POSES = INF
+
 
 class TMPProblem(object):
 
@@ -69,5 +71,3 @@ def get_distract_place_problem(p=100):
     goal_holding = None
     goal_poses = {'block1': 0}
     return TMPProblem(initial_config, initial_holding, dict(initial_poses), goal_config, goal_holding, goal_poses)
-
-NUM_POSES = INF

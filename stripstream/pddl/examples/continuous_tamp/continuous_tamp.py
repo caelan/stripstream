@@ -29,6 +29,11 @@ CollisionFree = Pred(BLOCK, POSE, BLOCK, POSE)
 Contained = Pred(BLOCK, POSE, REGION)
 CanPlace = Pred(BLOCK, REGION)
 
+IsSink = Pred(REGION)
+IsStove = Pred(REGION)
+Cleaned = Pred(BLOCK)
+Cooked = Pred(BLOCK)
+
 rename_easy(locals())
 
 
@@ -57,6 +62,29 @@ def compile_problem(tamp_problem):
         Action(name='move', parameters=[Q1, Q2],
                condition=AtConf(Q1),
                effect=And(AtConf(Q2), Not(AtConf(Q1)))),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Action(name='clean', parameters=[B1, R],
+               condition=And(InRegion(B1, R), IsSink(R)),
+               effect=And(Cleaned(B1))),
+        Action(name='cook', parameters=[B1, R],
+               condition=And(InRegion(B1, R), IsStove(R)),
+               effect=And(Cooked(B1))),
     ]
 
     axioms = [

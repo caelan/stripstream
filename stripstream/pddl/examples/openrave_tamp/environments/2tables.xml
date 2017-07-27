@@ -7,7 +7,7 @@
     <translation>-1.25 0 0.075</translation>
   </Robot>
 
-  <KinBody name="floorwalls">
+  <!--KinBody name="floorwalls">
     <Body type="static">
       <Translation>0 0 0</Translation>
       <Geom type="box">
@@ -36,7 +36,7 @@
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
     </Body>
-  </KinBody>
+  </KinBody-->
 
   <KinBody name="table1" file="data/table.kinbody.xml">
     <Translation>+2 0 0.7479</Translation>

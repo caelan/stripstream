@@ -1,4 +1,4 @@
-from openravepy import rotationMatrixFromAxisAngle, Sensor, RaveCreateCollisionChecker, databases, interfaces,  IkParameterization, GeometryType, matrixFromPose, RaveCreateKinBody, planning_error, openravepy_int,  CollisionOptionsStateSaver
+from openravepy import rotationMatrixFromAxisAngle, Sensor, RaveCreateCollisionChecker, databases, interfaces,  IkParameterization, GeometryType, matrixFromPose, RaveCreateKinBody, planning_error, openravepy_int,  CollisionOptionsStateSaver, DOFAffine
 from openravepy.misc import SetViewerUserThread
 
 from itertools import count
@@ -46,6 +46,10 @@ def get_name(body):
 
 def get_geometries(body):
     return (geometry for link in body.GetLinks() for geometry in link.GetGeometries())
+
+
+def in_env(body):
+    return body.GetEnvironmentId != 0
 
 
 def set_color(body, color):
@@ -110,12 +114,10 @@ def close_gripper(manipulator):
 
 
 def random_inverse_reachability(ir_model, manip_trans):
-    print ir_model.__dict__
-    raw_input('awfaawef')
     index_manip_iterator = [(manip_trans, manip_trans)]
     try:
         for base_trans, _, _ in ir_model.randomBaseDistributionIterator(index_manip_iterator):
-            set_trans(ir_model.robot, base_trans)
+
             yield base_trans
     except (ValueError, planning_error):
         raise StopIteration
@@ -125,7 +127,6 @@ def openrave_inverse_reachability(ir_model, manip_trans):
     index_manip_iterator = [(manip_trans, manip_trans)]
     try:
         for base_trans, _, _ in ir_model.sampleBaseDistributionIterator(index_manip_iterator, logllthresh=-INF, Nprematuresamples=1):
-            set_trans(ir_model.robot, base_trans)
 
             yield base_trans
     except (ValueError, planning_error):
@@ -193,6 +194,26 @@ def sample_manipulator_trajectory(manipulator, traj):
             yield conf
 
 
+def base_values_from_tform(trans, affine_mask, rotation_axis=None):
+    return RaveGetAffineDOFValuesFromTransform(trans, affine_mask, rotation_axis)
+
+
+def sample_base_trajectory(robot, traj):
+    spec = traj.GetConfigurationSpecification()
+    print spec
+    print robot.GetActiveDOFIndices()
+    print [traj.GetWaypoint(i) for i in range(traj.GetNumWaypoints())]
+    waypoints = [spec.ExtractJointValues(traj.GetWaypoint(i), robot, robot.GetActiveDOFIndices())
+                 for i in range(traj.GetNumWaypoints())]
+    waypoints = [spec.ExtractTransform(np.identity(4), traj.GetWaypoint(i), robot)
+                 for i in range(traj.GetNumWaypoints())]
+    print waypoints
+    yield waypoints[0]
+    for start, end in zip(waypoints, waypoints[1:]):
+        for conf in linear_interpolation(robot, start, end):
+            yield conf
+
+
 def execute_viewer(env, execute):
     if sys.platform == 'darwin':
         SetViewerUserThread(env, 'qtcoin', execute)
@@ -213,11 +234,15 @@ def initialize_openrave(env, manipulator_name, min_delta=MIN_DELTA, collision_ch
 
     assert len(env.GetRobots()) == 1
     robot = env.GetRobots()[0]
+
     cd_model = databases.convexdecomposition.ConvexDecompositionModel(robot)
     if not cd_model.load():
+        print 'Generating convex decomposition model'
         cd_model.autogenerate()
     l_model = databases.linkstatistics.LinkStatisticsModel(robot)
+
     if not l_model.load():
+        print 'Generating link statistics model'
         l_model.autogenerate()
     l_model.setRobotWeights()
     l_model.setRobotResolutions(xyzdelta=min_delta)
@@ -228,14 +253,14 @@ def initialize_openrave(env, manipulator_name, min_delta=MIN_DELTA, collision_ch
     ikmodel = databases.inversekinematics.InverseKinematicsModel(robot=robot, iktype=IkParameterization.Type.Transform6D,
                                                                  forceikfast=True, freeindices=None, freejoints=None, manip=None)
     if not ikmodel.load():
-        print 'Generating IK model'
+        print 'Generating inverse kinematics model'
         ikmodel.autogenerate()
 
     base_manip = interfaces.BaseManipulation(
         robot, plannername=None, maxvelmult=None)
     ir_model = databases.inversereachability.InverseReachabilityModel(robot)
     if ir_model.load():
-        print 'Generating IR model'
+        print 'Generating inverse reachability model'
         ir_model.autogenerate()
 
     return robot, manipulator, base_manip, ir_model
@@ -258,6 +283,44 @@ def linear_motion_plan(robot, end_config):
                 if env.CheckCollision(robot):
                     return None
             return path
+
+
+def set_active(robot, indices=(), use_base=False):
+    if use_base is False:
+        robot.SetActiveDOFs(indices)
+    robot.SetActiveDOFs(indices, DOFAffine.X | DOFAffine.Y |
+                        DOFAffine.RotationAxis, (0, 0, 1))
+
+
+def cspace_motion_plan(base_manip, indices, goal, step_length=MIN_DELTA, max_iterations=10, max_tries=1):
+    with base_manip.robot:
+        base_manip.robot.SetActiveDOFs(indices)
+        with collision_saver(base_manip.robot.GetEnv(), openravepy_int.CollisionOptions.ActiveDOFs):
+            try:
+                traj = base_manip.MoveActiveJoints(goal=goal, steplength=step_length, maxiter=max_iterations, maxtries=max_tries,
+                                                   execute=False, outputtraj=None, goals=None, outputtrajobj=True, jitter=None, releasegil=False, postprocessingplanner=None,
+                                                   postprocessingparameters=None)
+
+                return traj
+
+            except planning_error:
+                return None
+
+
+def base_motion_plan(base_manip, goal, step_length=None, max_iterations=50, max_tries=1):
+    with base_manip.robot:
+        set_active(base_manip.robot, use_base=True)
+        with collision_saver(base_manip.robot.GetEnv(), openravepy_int.CollisionOptions.ActiveDOFs):
+            try:
+                traj = base_manip.MoveActiveJoints(goal=goal, steplength=step_length, maxiter=max_iterations, maxtries=max_tries,
+                                                   execute=False, outputtraj=None, goals=None, outputtrajobj=True, jitter=None, releasegil=False, postprocessingplanner=None,
+                                                   postprocessingparameters=None)
+
+                print traj
+
+                return list(sample_base_trajectory(base_manip.robot, traj))
+            except planning_error:
+                return None
 
 
 def manipulator_motion_plan(base_manip, manipulator, goal, step_length=MIN_DELTA, max_iterations=10, max_tries=1):

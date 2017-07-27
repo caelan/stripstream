@@ -19,7 +19,7 @@ class PRMViewer(object):
         self.canvas.pack()
 
     def pixel_from_point(self, (x, y)):
-        # return (int(x*self.width), int(self.height - y*self.height))
+
         return (x * self.width, self.height - y * self.height)
 
     def draw_point(self, point, radius=5):
@@ -40,8 +40,6 @@ class PRMViewer(object):
     def clear(self):
         self.canvas.delete('all')
 
-#################################################################
-
 
 def get_distance(point1, point2):
     return np.linalg.norm(np.array(point1) - np.array(point2))
@@ -58,7 +56,7 @@ def sample_line((point1, point2), step_size=.05):
     yield point2
 
 
-def line_collides(line, box):  # TODO - could also compute this exactly
+def line_collides(line, box):
     return any(contains(p, box) for p in sample_line(line))
 
 
@@ -101,6 +99,16 @@ def draw_solution(plan, goal, obstacles):
     if plan:
         for _, line in plan:
             viewer.draw_line(line)
-            # for p in [p1, p2]:
+
             for p in sample_line(line):
                 viewer.draw_point(p, radius=2)
+
+
+def draw_roadmap(roadmap, goal, obstacles):
+    viewer = PRMViewer()
+    for box in obstacles:
+        viewer.draw_rectangle(box, color='brown')
+    if is_region(goal):
+        viewer.draw_rectangle(goal, color='green')
+    for line in roadmap:
+        viewer.draw_line(line)
