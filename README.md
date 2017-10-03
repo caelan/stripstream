@@ -14,14 +14,6 @@ https://caelan.github.io/stripstream/
 
 http://web.mit.edu/caelan/www/research/stripstream/
 
-## Optional Dependencies
-
-NumPy - http://www.numpy.org/
-
-Tkinter - https://wiki.python.org/moin/TkInter
-
-OpenRAVE - http://openrave.org/, https://github.com/rdiankov/openrave
-
 ### Virtual Machine
 
 I've provided a VMWare virtual machine (VM) that has STRIPStream, FastDownward, NumPy, Tkinter, and OpenRAVE installed on it. Remember to periodically pull STRIPStream and the other libraries to obtain the lastest version. The VM username is ss-or, and the password is also ss-or. 
@@ -77,6 +69,17 @@ FTS
 ```
 python -m fts_scripts.run_tutorial
 python -m fts_scripts.run_prm
+```
+
+## PyR2 Examples
+
+Install the following repositories and add them to your PYTHONPATH environment variable.
+
+https://github.com/caelan/PyR2
+https://github.com/caelan/motion-planners
+
+```
+python -m scripts.run_pyr2_fixed_base
 ```
 
 ## OpenRAVE Examples
