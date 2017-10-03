@@ -83,10 +83,10 @@ def create_problem():
     # Conditional stream declarations
     cond_streams = [
         GeneratorStream(inputs=[], outputs=[P1], conditions=[], effects=[],
-                        generator=lambda: xrange(num_poses)),  # Enumerating all the poses
+                        generator=lambda: ((p,) for p in xrange(num_poses))),  # Enumerating all the poses
 
         GeneratorStream(inputs=[P1], outputs=[Q1], conditions=[], effects=[LegalKin(P1, Q1)],
-                        generator=lambda p: [p]),  # Inverse kinematics
+                        generator=lambda p: [(p,)]),  # Inverse kinematics
 
         TestStream(inputs=[B1, P1, B2, P2], conditions=[], effects=[CollisionFree(B1, P1, B2, P2)],
                    test=lambda b1, p1, b2, p2: p1 != p2, eager=True),  # Collision checking

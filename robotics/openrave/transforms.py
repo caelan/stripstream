@@ -219,7 +219,7 @@ def base_values_from_pose(pose):
 
 
 def is_upright(trans):
-    return within(abs(trans[2, 2]), 1)
+    return abs(abs(trans[2, 2]) - 1) < 1e-6
 
 
 def pose_from_base_values(base_values, z=0.0):

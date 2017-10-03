@@ -1,15 +1,14 @@
-from stripstream.utils import flatten
-
 from inspect import currentframe, getfile
-
 from itertools import product
 from random import sample
 import os
-import numpy as np
 import math
 
-from openrave_tamp_utils import set_base_conf, Pose, box_body, get_name,  set_manipulator_conf, mirror_arm_config, open_gripper, close_gripper, top_grasps, Grasp,  SURFACE_Z_OFFSET, compute_surface
-from transforms import pose_from_quat_point, set_pose, unit_quat
+import numpy as np
+
+from stripstream.utils import flatten
+from utils import set_base_conf, Pose, box_body, get_name,  set_manipulator_conf, mirror_arm_config, open_gripper, close_gripper, top_grasps, Grasp,  SURFACE_Z_OFFSET, compute_surface
+from robotics.openrave.transforms import pose_from_quat_point, set_pose, unit_quat
 
 TOP_HOLDING_LEFT_ARM = [0.67717021, -0.34313199,
                         1.2, -1.46688405, 1.24223229, -1.95442826, 2.22254125]
@@ -67,6 +66,7 @@ def simple(env):
     close_gripper(robot.GetManipulator('rightarm'))
     robot.SetDOFValues([.15], [robot.GetJointIndex('torso_lift_joint')])
     set_base_conf(robot, (0, 0, 0))
+    robot.SetAffineTranslationLimits(*(2 * np.array([[-1, -1, 0], [1, 1, 0]])))
 
     objA = box_body(env, 'objA', .07, .05, .2, color=BLUE)
     env.Add(objA)

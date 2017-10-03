@@ -3,16 +3,13 @@
 import argparse
 import sys
 
-from openravepy import RaveSetDebugLevel, DebugLevel, Environment, RaveDestroy, databases, interfaces
+from openravepy import Environment, RaveDestroy
 
-from stripstream.algorithms.incremental.incremental_planner import incremental_planner
 from stripstream.algorithms.focused.simple_focused import simple_focused
 from stripstream.algorithms.search.fast_downward import get_fast_downward
-
 from stripstream.pddl.examples.openrave_tamp.openrave_tamp_utils import open_gripper, \
     Conf, initialize_openrave, execute_viewer
-
-from stripstream.fts.constraint import Eq, ConType, Unconstrained
+from stripstream.fts.constraint import Eq, ConType
 from stripstream.fts.variable import VarType, Par, Var, X, U, nX
 from stripstream.fts.clause import Clause
 from stripstream.fts.sampler import Sampler
@@ -20,10 +17,10 @@ from stripstream.fts.problem import FTSProblem
 from stripstream.fts.stripstream_conversion import constraint_to_stripstream
 from stripstream.fts.utils import convert_plan, rename_variables
 from stripstream.utils import SEPARATOR, INF
-
-from stripstream.pddl.examples.openrave_tamp.problems import dantam_distract
+from robotics.openrave.problems import dantam_distract
 from robotics.openrave.tamp_fixed_base import cfree_pose_fn, cfree_traj_fn, \
     sample_grasp_traj_fn, sample_free_motion_fn, sample_holding_motion_fn, visualize_solution
+
 
 ####################
 

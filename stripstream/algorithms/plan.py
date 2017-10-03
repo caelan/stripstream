@@ -73,13 +73,12 @@ def get_states(universe, plan):
                  for operator, parameters in plan]
     constants = universe.type_to_objects
     axioms = list(instantiate_axioms(universe))
-    states = [apply_axioms(universe.initial_atoms, constants, axioms)]
+    state = universe.initial_atoms
+    yield apply_axioms(state, constants, axioms)
     for i, instance in enumerate(instances):
 
-        states.append(apply_axioms(instance.apply(
-            states[-1], constants), constants, axioms))
-
-    return states
+        state = instance.apply(state, constants)
+        yield apply_axioms(state, constants, axioms)
 
 
 def feasible_subplan(universe, plan):

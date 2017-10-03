@@ -28,4 +28,6 @@ def get_increases(f):
         return [f]
     if isinstance(f, atoms.Atom):
         return []
-    return reduce(operator.add, [get_increases(formula) for formula in f.formulas])
+    if isinstance(f, connectives.Connective):
+        return reduce(operator.add, [get_increases(formula) for formula in f.formulas])
+    return []

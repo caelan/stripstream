@@ -3,15 +3,15 @@
 import argparse
 import sys
 
-from openravepy import RaveSetDebugLevel, DebugLevel, Environment, RaveDestroy, databases, interfaces
+from openravepy import Environment, RaveDestroy
 
 #from stripstream.algorithms.incremental.incremental_planner import incremental_planner
 from stripstream.algorithms.focused.simple_focused import simple_focused
 from stripstream.algorithms.search.fast_downward import get_fast_downward
 
 from stripstream.pddl.utils import convert_plan
-from stripstream.pddl.examples.openrave_tamp.problems import dantam_distract
-from stripstream.pddl.examples.openrave_tamp.openrave_tamp_utils import open_gripper, \
+from robotics.openrave.problems import dantam_distract
+from robotics.openrave.utils import open_gripper, \
     Conf, initialize_openrave, execute_viewer
 from stripstream.pddl.objects import EasyType, EasyParameter
 from stripstream.pddl.logic.predicates import EasyPredicate
@@ -123,14 +123,13 @@ def solve_tamp(env):
                         [manipulator.GetArmIndices()])
 
     cfree_pose = cfree_pose_fn(env, body1, body2)
-    cfree_traj = cfree_traj_fn(
-        env, robot, manipulator, body1, body2, all_bodies)
+    cfree_traj = cfree_traj_fn(env, manipulator, body1, body2, all_bodies)
     sample_grasp_traj = sample_grasp_traj_fn(
-        env, robot, manipulator, body1, all_bodies)
+        env, manipulator, body1, all_bodies)
     sample_free_motion = sample_free_motion_fn(
         manipulator, base_manip, all_bodies)
     sample_holding_motion = sample_holding_motion_fn(
-        robot, manipulator, base_manip, body1, all_bodies)
+        manipulator, base_manip, body1, all_bodies)
 
     ####################
 

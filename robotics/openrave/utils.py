@@ -1,17 +1,20 @@
-from openravepy import rotationMatrixFromAxisAngle, Sensor, RaveCreateCollisionChecker, databases, interfaces,  IkParameterization, GeometryType, matrixFromPose, RaveCreateKinBody, planning_error, openravepy_int,  CollisionOptionsStateSaver, DOFAffine
-from openravepy.misc import SetViewerUserThread
-
 from itertools import count
-from transforms import quat_from_axis_angle, trans_from_pose, manip_trans_from_object_trans,  length, normalize, trans_from_point, set_pose, get_point,  trans_from_quat, trans_from_axis_angle, get_active_config, set_active_config, set_quat,  pose_from_quat_point, set_trans
-from stripstream.utils import irange, INF
 from random import uniform
-
 import math
-import numpy as np
 import sys
+
+from openravepy import rotationMatrixFromAxisAngle, Sensor, RaveCreateCollisionChecker, databases, interfaces,  IkParameterization, GeometryType, RaveCreateKinBody, planning_error, openravepy_int,  CollisionOptionsStateSaver, DOFAffine, RaveGetEnvironment, RaveGetAffineDOFValuesFromTransform
+import numpy as np
+
+from openravepy.misc import SetViewerUserThread
+from robotics.openrave.transforms import quat_from_axis_angle, trans_from_pose, manip_trans_from_object_trans,  length, normalize, trans_from_point, get_point,  trans_from_quat, trans_from_axis_angle, get_active_config, set_active_config, set_quat,  pose_from_quat_point
+from stripstream.utils import irange, INF
 
 MIN_DELTA = 0.01
 SURFACE_Z_OFFSET = 1e-3
+
+AFFINE_MASK = DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis
+ROTATION_AXIS = (0, 0, 1)
 
 
 class Wrapper(object):
@@ -38,6 +41,10 @@ class Grasp(Wrapper):
 
 class Traj(Wrapper):
     _ids = count(0)
+
+
+def get_env(body):
+    return RaveGetEnvironment(body.GetEnvironmentId())
 
 
 def get_name(body):
@@ -148,6 +155,47 @@ def solve_inverse_kinematics(manipulator, manip_trans):
         return config
 
 
+def get_collision_fn(env, body, self_collisions=False):
+    def fn(q):
+        body.SetActiveDOFValues(q)
+        return env.CheckCollision(body) or (self_collisions and body.CheckSelfCollision())
+    return fn
+
+
+def get_sample_fn(env, body, collisions=False, self_collisions=False):
+    limits = body.GetActiveDOFLimits()
+    collision = get_collision_fn(env, body, self_collisions=self_collisions)
+
+    def fn():
+        while True:
+            config = np.random.uniform(*limits)
+            if not collisions or not collision(config):
+                return config
+    return fn
+
+
+def get_distance_fn(body):
+    weights = body.GetActiveDOFWeights()
+
+    def distance_fn(q1, q2):
+        diff = body.SubtractActiveDOFValues(q2, q1)
+        return math.sqrt(np.dot(weights, diff * diff))
+    return distance_fn
+
+
+def get_extend_fn(body):
+    resolutions = body.GetActiveDOFResolutions()
+
+    def extend_fn(q1, q2):
+        n = int(np.max(
+            np.abs(np.divide(body.SubtractActiveDOFValues(q2, q1), resolutions)))) + 1
+        q = q1
+        for i in range(n):
+            q = (1. / (n - i)) * body.SubtractActiveDOFValues(q2, q) + q
+            yield q
+    return extend_fn
+
+
 def manip_from_pose_grasp(pose, grasp):
     return manip_trans_from_object_trans(trans_from_pose(pose), grasp)
 
@@ -194,20 +242,14 @@ def sample_manipulator_trajectory(manipulator, traj):
             yield conf
 
 
-def base_values_from_tform(trans, affine_mask, rotation_axis=None):
-    return RaveGetAffineDOFValuesFromTransform(trans, affine_mask, rotation_axis)
+def extract_base_values(robot, spec, data):
+    return RaveGetAffineDOFValuesFromTransform(spec.ExtractTransform(np.identity(4), data, robot), AFFINE_MASK, ROTATION_AXIS)
 
 
 def sample_base_trajectory(robot, traj):
     spec = traj.GetConfigurationSpecification()
-    print spec
-    print robot.GetActiveDOFIndices()
-    print [traj.GetWaypoint(i) for i in range(traj.GetNumWaypoints())]
-    waypoints = [spec.ExtractJointValues(traj.GetWaypoint(i), robot, robot.GetActiveDOFIndices())
-                 for i in range(traj.GetNumWaypoints())]
-    waypoints = [spec.ExtractTransform(np.identity(4), traj.GetWaypoint(i), robot)
-                 for i in range(traj.GetNumWaypoints())]
-    print waypoints
+    waypoints = [extract_base_values(robot, spec, traj.GetWaypoint(
+        i)) for i in range(traj.GetNumWaypoints())]
     yield waypoints[0]
     for start, end in zip(waypoints, waypoints[1:]):
         for conf in linear_interpolation(robot, start, end):
@@ -270,6 +312,27 @@ def collision_saver(env, options):
     return CollisionOptionsStateSaver(env.GetCollisionChecker(), options)
 
 
+def has_mp():
+    try:
+        import motion_planners
+    except ImportError:
+        return False
+    return True
+
+
+def mp_birrt(robot, q1, q2):
+    from motion_planners.rrt_connect import birrt
+    return birrt(q1, q2, get_distance_fn(robot),
+                 get_sample_fn(robot.GetEnv(), robot),
+                 get_extend_fn(robot), get_collision_fn(robot.GetEnv(), robot))
+
+
+def mp_straight_line(robot, q1, q2):
+    from motion_planners.rrt_connect import direct_path
+    return direct_path(q1, q2, get_extend_fn(robot),
+                       get_collision_fn(robot.GetEnv(), robot))
+
+
 def linear_motion_plan(robot, end_config):
     env = robot.GetEnv()
     with robot:
@@ -288,8 +351,7 @@ def linear_motion_plan(robot, end_config):
 def set_active(robot, indices=(), use_base=False):
     if use_base is False:
         robot.SetActiveDOFs(indices)
-    robot.SetActiveDOFs(indices, DOFAffine.X | DOFAffine.Y |
-                        DOFAffine.RotationAxis, (0, 0, 1))
+    robot.SetActiveDOFs(indices, AFFINE_MASK, ROTATION_AXIS)
 
 
 def cspace_motion_plan(base_manip, indices, goal, step_length=MIN_DELTA, max_iterations=10, max_tries=1):
@@ -307,7 +369,8 @@ def cspace_motion_plan(base_manip, indices, goal, step_length=MIN_DELTA, max_ite
                 return None
 
 
-def base_motion_plan(base_manip, goal, step_length=None, max_iterations=50, max_tries=1):
+def base_motion_plan(base_manip, goal, step_length=MIN_DELTA, max_iterations=10, max_tries=1):
+
     with base_manip.robot:
         set_active(base_manip.robot, use_base=True)
         with collision_saver(base_manip.robot.GetEnv(), openravepy_int.CollisionOptions.ActiveDOFs):
@@ -315,8 +378,6 @@ def base_motion_plan(base_manip, goal, step_length=None, max_iterations=50, max_
                 traj = base_manip.MoveActiveJoints(goal=goal, steplength=step_length, maxiter=max_iterations, maxtries=max_tries,
                                                    execute=False, outputtraj=None, goals=None, outputtrajobj=True, jitter=None, releasegil=False, postprocessingplanner=None,
                                                    postprocessingparameters=None)
-
-                print traj
 
                 return list(sample_base_trajectory(base_manip.robot, traj))
             except planning_error:
