@@ -46,7 +46,7 @@ It should look similar to ```.../FF-v2.3/``` or ```.../FF-X/```.
 
 The following tutorial implements a countable task and motion planning (TAMP) problem:
 
-https://github.mit.edu/pages/caelan/stripstream/tutorial.html
+https://caelan.github.io/stripstream/tutorial.html
 
 You can run this tutorial using the following command:
 
