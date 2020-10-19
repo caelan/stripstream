@@ -1,5 +1,7 @@
 # stripstream
 
+**DEPRECATED**: superseded by [pddlstream](https://github.com/caelan/pddlstream)
+
 STRIPStream is a Python library containing languages for modeling planning problems in infinite domains and algorithms for solving these problems. 
 
 STRIPStream includes two representation languages: the STRIPStream language and the Factored Transition System (FTS) Language. The STRIPStream language is a programmatic extension of PDDL (Planning Domain Definition Language). STRIPStream problem formluations are in ```scripts/```. 
